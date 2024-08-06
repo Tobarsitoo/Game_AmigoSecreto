@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Amigo Secreto - Usuario</title>
+    <link href="/css/styles.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<body id="page-top">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="mainNav">
+        <div class="container px-4">
+            <a class="navbar-brand" href="#page-top">
+                <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
+                    alt="" style="width: 150px; height: auto;">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/usuario-dashboard#preferencias">Preferencias</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#services">Amigo</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Ruleta</a></li>
+                </ul>
+            </div>
+            <div>
+                <button id="logout-button" class="btn btn-lg btn-warning text-dark">Cerrar Sesión</button>
+            </div>
+        </div>
+    </nav>
+
+    <script>
+        document.getElementById('logout-button').addEventListener('click', () => {
+            fetch('/logout', {
+                method: 'GET',
+                credentials: 'same-origin'
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = '/';
+                    } else {
+                        console.error('No se pudo cerrar sesión');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cerrar sesión:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
