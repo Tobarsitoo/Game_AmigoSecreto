@@ -14,6 +14,13 @@ const UserModel = {
             if (err) return callback(err);
             callback(null, isMatch);
         });
+    },
+
+    findById: (id, callback) => {
+        connection.query('SELECT * FROM usuarios WHERE id_usuario = ?', [id], (err, results) => {
+            if (err) return callback(err);
+            callback(null, results[0]);
+        });
     }
 };
 

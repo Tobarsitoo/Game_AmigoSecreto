@@ -19,6 +19,7 @@ exports.login = (req, res) => {
                         req.session.nombre = user.nombre;
                         req.session.usuario = user.usuario;
                         req.session.rol = user.rol;
+                        req.session.id_usuario = user.id_usuario;
 
                         let redirectUrl = '/home';
                         if (user.rol === 'administrador') {

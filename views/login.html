@@ -47,31 +47,30 @@
                         <div class="row g-0">
                             <div class="col-md-6 col-lg-5 d-none d-md-block">
                                 <img src="../empresa.jpg" alt="login form" class="img-fluid"
-                                    style="border-radius: 1rem 0 0 1rem; height: 550px; width: 400px;" />
+                                    style="border-radius: 1rem 0 0 1rem; height: 100%; width: 100%;" />
                             </div>
                             <div class="col-md-6 col-lg-7 d-flex align-items-center">
                                 <div class="card-body p-4 p-lg-5 text-black">
-                                    <form id="loginForm">
-                                        <div class="d-flex align-items-center mb-3 pb-1">
+                                    <form id="loginForm" class="needs-validation" novalidate>
+                                        <div class="d-flex mb-3 pb-1 justify-content-center">
                                             <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
-                                                alt="" style="width: 220px; height: auto;">
+                                                alt="" style="width: 70%; height: auto;">
                                         </div>
                                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Iniciar Sesión</h5>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="text" id="usuario" class="form-control form-control-lg"
-                                                name="usuario" />
+                                        <div class="form-outline mb-4">
+                                            <input type="text" id="usuario" class="form-control form-control-lg" name="usuario" required />
                                             <label class="form-label" for="usuario">Usuario</label>
+                                            <div class="invalid-feedback">Por favor, ingrese su usuario.</div>
                                         </div>
-                                        <div data-mdb-input-init class="form-outline mb-4">
-                                            <input type="password" id="contraseña" class="form-control form-control-lg"
-                                                name="contraseña" />
+                                        <div class="form-outline mb-4">
+                                            <input type="password" id="contraseña" class="form-control form-control-lg" name="contraseña" required />
                                             <label class="form-label" for="contraseña">Contraseña</label>
+                                            <div class="invalid-feedback">Por favor, ingrese su contraseña.</div>
                                         </div>
                                         <div class="pt-1 mb-4">
-                                            <button data-mdb-button-init data-mdb-ripple-init
-                                                class="btn btn-warning btn-lg btn-block" type="submit">Iniciar
-                                                Sesión</button>
+                                            <button class="btn btn-warning btn-lg btn-block" type="submit">Iniciar Sesión</button>
                                         </div>
+                                        <div id="errorMessages" class="text-danger"></div>
                                     </form>
                                 </div>
                             </div>
@@ -82,10 +81,30 @@
         </div>
     </section>
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function (event) {
-            event.preventDefault();
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                // Get the forms we want to add validation styles to
+                var forms = document.getElementsByClassName('needs-validation');
+                // Loop over them and prevent submission
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        } else {
+                            handleFormSubmit(event, form);
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
 
-            const formData = new FormData(this);
+        function handleFormSubmit(event, form) {
+            event.preventDefault();
+            const formData = new FormData(form);
             const data = {};
 
             formData.forEach((value, key) => { data[key] = value });
@@ -108,28 +127,23 @@
                             timer: 1500,
                             showConfirmButton: false,
                             timerProgressBar: true,
-                            didOpen: () => {
-                            }
                         }).then(() => {
                             window.location.href = data.redirect;
                         });
                     } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.message
-                        });
+                        displayErrorMessages(data.message);
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Ocurrió un error al iniciar sesión'
-                    });
+                    displayErrorMessages('Ocurrió un error al iniciar sesión');
                 });
-        });
+        }
+
+        function displayErrorMessages(message) {
+            const errorMessages = document.getElementById('errorMessages');
+            errorMessages.textContent = message;
+        }
     </script>
 </body>
 
