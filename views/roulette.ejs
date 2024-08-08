@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruleta - Amigo Secreto</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .wheel-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            margin-top: 20px;
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border-radius: 10px;
+            border: 5px solid #343a40;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+        }
+
+        .wheel img {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: auto;
+            transform: translateY(100%);
+            animation: bounce 2s infinite;
+        }
+
+        .spin-btn {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .spin-btn button {
+            font-size: 18px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-content {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background-color: #FFC107;
+            color: #000;
+        }
+
+        .modal-body {
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .modal-footer {
+            background-color: #f1f1f1;
+        }
+
+        .modal-body ul {
+            max-height: 150px;
+            overflow-y: auto;
+            border-radius: 5px;
+        }
+
+        .modal-body ul li {
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-body ul li:last-child {
+            border-bottom: none;
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(100%);
+            }
+
+            50% {
+                transform: translateY(-20%);
+            }
+
+            100% {
+                transform: translateY(100%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/navbar'); %>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <h1 class="my-5">¡Gira la Ruleta para Asignar a tu Amigo Secreto!</h1>
+                </div>
+            </div>
+            <div class="row wheel-container">
+                <div class="wheel" id="wheel">
+                    <img id="wheelImage" src="../regalos.jpg" alt="Ruleta">
+                </div>
+            </div>
+            <div class="row spin-btn">
+                <button class="btn btn-primary" id="spinButton">Girar Ruleta</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal para mostrar el amigo secreto -->
+    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Amigo Secreto Asignado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <h4 id="userName" class="mb-2"></h4>
+                        <p id="userInfo" class="text-muted"></p>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <h5 class="text-primary">Preferencias de Dulces:</h5>
+                            <ul id="dulcesList" class="list-group">
+                                <!-- Aquí se agregarán los dulces -->
+                            </ul>
+                            <div id="noDulces" class="text-center mt-2 text-muted" style="display: none;">No hay preferencias de dulces.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h5 class="text-primary">Preferencias de Regalos:</h5>
+                            <ul id="regalosList" class="list-group">
+                                <!-- Aquí se agregarán los regalos -->
+                            </ul>
+                            <div id="noRegalos" class="text-center mt-2 text-muted" style="display: none;">No hay preferencias de regalos.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../partials/footer'); %>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#spinButton').click(function () {
+                const wheelImage = $('#wheelImage');
+
+                // Remueve cualquier animación previa
+                wheelImage.css('animation', 'none');
+
+                // Reinicia la animación
+                setTimeout(function () {
+                    wheelImage.css('animation', 'bounce 2s infinite');
+                }, 10);
+
+                setTimeout(function () {
+                    $.post('/roulette/assign', function (response) {
+                        if (response.success) {
+                            // Realiza una solicitud AJAX para obtener las preferencias del amigo
+                            $.ajax({
+                                url: '/roulette/amigo-preferencias',
+                                method: 'GET',
+                                success: function (response) {
+                                    if (response.success) {
+                                        const amigo = response.amigo;
+                                        if (amigo) {
+                                            // Mostrar la modal con la información del amigo
+                                            $('#userName').text(amigo.nombre);
+                                            $('#userInfo').html(`Género: ${amigo.genero}`);
+
+                                            // Verificar y convertir los campos regalos y dulces
+                                            let regalos = amigo.regalos || [];
+                                            let dulces = amigo.dulces || [];
+
+                                            // Si no son arrays, convertirlos en arrays
+                                            if (typeof regalos === 'string') {
+                                                regalos = regalos.split(',');
+                                            }
+
+                                            if (typeof dulces === 'string') {
+                                                dulces = dulces.split(',');
+                                            }
+
+                                            // Limpiar y llenar las listas de regalos y dulces
+                                            $('#regalosList').empty();
+                                            $('#dulcesList').empty();
+
+                                            // Mostrar u ocultar los mensajes de no hay preferencias
+                                            if (regalos.length) {
+                                                regalos.forEach(function (regalo) {
+                                                    $('#regalosList').append(`<li class="list-group-item">${regalo}</li>`);
+                                                });
+                                                $('#noRegalos').hide();
+                                            } else {
+                                                $('#noRegalos').show();
+                                            }
+
+                                            if (dulces.length) {
+                                                dulces.forEach(function (dulce) {
+                                                    $('#dulcesList').append(`<li class="list-group-item">${dulce}</li>`);
+                                                });
+                                                $('#noDulces').hide();
+                                            } else {
+                                                $('#noDulces').show();
+                                            }
+
+                                            // Mostrar la modal
+                                            $('#resultModal').modal('show');
+                                        } else {
+                                            console.error("No se encontró información del amigo.");
+                                        }
+                                    } else {
+                                        console.error("Error al obtener las preferencias del amigo:", response.message);
+                                    }
+                                },
+                                error: function (jqXHR, textStatus, errorThrown) {
+                                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                                }
+                            });
+
+                        } else {
+                            alert('Hubo un error al asignar tu amigo secreto.');
+                        }
+                    }).fail(function () {
+                        alert('Hubo un error en la comunicación con el servidor.');
+                    });
+                }, 4000);
+            });
+        });
+    </script>
+</body>
+
+</html>
