@@ -22,11 +22,11 @@
         .wheel {
             width: 300px;
             height: 300px;
-            border-radius: 10px;
-            border: 5px solid #343a40;
+            border-radius: 15px;
+            border: 8px solid #4A90E2;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -39,7 +39,6 @@
             width: 100%;
             height: auto;
             transform: translateY(100%);
-            animation: bounce 2s infinite;
         }
 
         .spin-btn {
@@ -49,20 +48,28 @@
         }
 
         .spin-btn button {
-            font-size: 18px;
-            padding: 10px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 20px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background-color: #4A90E2;
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .spin-btn button:hover {
+            background-color: #357ABD;
         }
 
         .modal-content {
-            border-radius: 10px;
+            border-radius: 15px;
             overflow: hidden;
+            background-color: #ffffff;
         }
 
         .modal-header {
-            background-color: #FFC107;
-            color: #000;
+            background-color: #4A90E2;
+            color: #ffffff;
         }
 
         .modal-body {
@@ -77,7 +84,8 @@
         .modal-body ul {
             max-height: 150px;
             overflow-y: auto;
-            border-radius: 5px;
+            border-radius: 10px;
+            padding: 0;
         }
 
         .modal-body ul li {
@@ -120,7 +128,7 @@
                 </div>
             </div>
             <div class="row spin-btn">
-                <button class="btn btn-primary" id="spinButton">Girar Ruleta</button>
+                <button class="btn" id="spinButton">Girar Ruleta</button>
             </div>
         </div>
     </section>
@@ -174,7 +182,7 @@
                 // Remueve cualquier animación previa
                 wheelImage.css('animation', 'none');
 
-                // Reinicia la animación
+                // Inicia la animación cuando se hace clic en el botón
                 setTimeout(function () {
                     wheelImage.css('animation', 'bounce 2s infinite');
                 }, 10);

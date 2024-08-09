@@ -8,14 +8,47 @@
     <meta name="author" content="" />
     <title>Amigo Secreto - Usuario</title>
     <link href="/css/styles.css" rel="stylesheet" />
+    <style>
+        body {
+            background-color: #D1E9F6;
+        }
+
+        .navbar {
+            background-color: #F3F9FC;
+        }
+
+        .navbar-brand img {
+            width: 220px;
+            height: auto;
+        }
+
+        .navbar-nav .nav-link {
+            color: #4A90E2;
+            font-weight: bold;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #2C3E50;
+        }
+
+        #logout-button {
+            background-color: #2C3E50;
+            color: #FFD1E3;
+        }
+
+        #logout-button:hover {
+            background-color: #4A90E2;
+            color: #ffffff;
+        }
+    </style>
 </head>
 
 <body id="page-top">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" id="mainNav">
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
         <div class="container px-4">
             <a class="navbar-brand" href="#page-top">
                 <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
-                    alt="" style="width: 220px; height: auto;">
+                    alt="">
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,14 +56,13 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/usuario-dashboard#deseos">Deseos</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="/usuario-dashboard#deseos">Deseos</a></li>
                     <li class="nav-item"><a class="nav-link" href="/usuario-dashboard#amigo">Amigo</a></li>
                     <li class="nav-item"><a class="nav-link" href="/roulette">Ruleta</a></li>
                 </ul>
             </div>
             <div>
-                <button id="logout-button" class="btn btn-lg btn-warning text-dark">Cerrar Sesión</button>
+                <button id="logout-button" class="btn btn-lg">Cerrar Sesión</button>
             </div>
         </div>
     </nav>

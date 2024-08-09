@@ -59,42 +59,60 @@
     <%- include('../partials/navbar'); %>
 
         <header class="position-relative">
-            <video class="video-background" style="filter: brightness(50%);" autoplay muted loop>
+            <video class="video-background" style="filter: brightness(60%);" autoplay muted loop>
                 <source src="../donut.mp4" type="video/mp4">
                 Su navegador no soporta la etiqueta de vídeo.
             </video>
-            <div class="header-content text-center">
-                <h1 class="fw-bolder">Bienvenido, <%= nombre %>!</h1>
-                <p class="lead">Este es el juego de <span class="fw-bold text-uppercase " style="color: #FFD1E3;">AMIGO
-                        SECRETO</span> , para comenzar agrega tus deseos:</p>
-                        <a class="btn btn-lg" href="#deseos" style="background-color: #5BBCFF; color: #fff;">Agregar deseos</a>
+            <div class="header-content text-center text-white">
+                <h1 class="fw-bolder display-3">¡Bienvenido,
+                    <span
+                        style="color: #4A90E2; background-color: rgba(255, 255, 255, 0.7); padding: 0 10px; border-radius: 10px;">
+                        <%= nombre %>
+                    </span>!
+                </h1>
+                <p class="lead mb-4">Este es el juego de
+                    <span class="fw-bold text-uppercase"
+                        style="color: #FFD1E3; background-color: rgba(0, 0, 0, 0.5); padding: 0 10px; border-radius: 5px;">
+                        AMIGO SECRETO
+                    </span>.
+                    Para comenzar, agrega tus deseos:
+                </p>
+                <a class="btn btn-lg rounded-pill" href="#deseos"
+                    style="background-color: #2C3E50; color: #FFD1E3;">Agregar deseos</a>
             </div>
         </header>
 
         <!-- Deseos -->
-        <section id="deseos">
+        <section id="deseos" class="py-5" style="background-color: #D1E9F6;">
             <div class="container px-4">
                 <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8">
-                        <h2 class="text-center pb-5 text-uppercase">Lista de Deseos</h2>
-                        <p class="lead">Estas son tus <span class="fw-bold text-uppercase text-warning">Deseos</span>.
-                            En este apartado, podrás agregar los dulces y regalos que te gustaría recibir de tu <span
-                                class="fw-bold text-uppercase text-primary">AMIGO SECRETO</span>.</p>
+                    <div class="col-lg-10">
+                        <h2 class="text-center pb-5 text-uppercase"
+                            style="color: #4A90E2; font-size: 3rem; font-weight: bold;">🎁 Lista de Deseos 🎁</h2>
+                        <p class="lead text-center" style="color: #2C3E50;  font-size: 1.3rem;">
+                            Estas son tus <span class="fw-bold text-uppercase"
+                                style="color: #4A90E2; font-size: 1.3rem;">deseos</span>.
+                            Aquí puedes agregar los dulces y regalos que te gustaría recibir de tu <span
+                                class="fw-bold text-uppercase" style="color: #2C3E50;  font-size: 1.3rem;">amigo
+                                secreto</span>.
+                        </p>
                         <div class="row pt-3">
                             <!-- Dulces -->
-                            <div class="col-md-6 deseos">
-                                <div class="card shadow-sm mb-4">
-                                    <div class="card-body">
-                                        <img src="../dulce.gif" alt="" class="card-img-top mb-3">
-                                        <h3 class="text-center">Dulces</h3>
-                                        <input type="text" id="dulceInput" class="form-control mb-2"
-                                            placeholder="Agregar dulce">
-                                        <button id="addDulce" class="btn btn-primary text-light w-100">Agregar
-                                            Dulce</button>
-                                        <table id="dulceTable" class="table table-striped mt-3">
+                            <div class="col-md-6 mb-4 deseos">
+                                <div class="card shadow-sm border-0 h-100"
+                                    style="background-color: #F3F9FC; border-radius: 20px;">
+                                    <div class="card-body p-4 text-center">
+                                        <img src="../dulce.gif" alt="Dulces" class="card-img-top mb-3 rounded-circle"
+                                            style="width: 100px; height: 100px;">
+                                        <h3 class="text-center mb-4" style="color: #4A90E2;">Dulces</h3>
+                                        <input type="text" id="dulceInput" class="form-control mb-2 rounded-pill"
+                                            placeholder="Agregar dulce" style="border: 1px solid #4A90E2;">
+                                        <button id="addDulce" class="btn text-light w-100 rounded-pill"
+                                            style="background-color: #2C3E50;">Agregar Dulce</button>
+                                        <table id="dulceTable" class="table table-hover mt-3">
                                             <thead>
                                                 <tr>
-                                                    <th>Dulces</th>
+                                                    <th style="color: #4A90E2;">Dulces</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -105,19 +123,21 @@
                                 </div>
                             </div>
                             <!-- Regalos -->
-                            <div class="col-md-6 deseos">
-                                <div class="card shadow-sm mb-4">
-                                    <div class="card-body">
-                                        <img src="../regalo.gif" alt="" class="card-img-top mb-3">
-                                        <h3 class="text-center">Regalos</h3>
-                                        <input type="text" id="regaloInput" class="form-control mb-2"
-                                            placeholder="Agregar regalo">
-                                        <button id="addRegalo" class="btn btn-primary text-light w-100">Agregar
-                                            Regalo</button>
-                                        <table id="regaloTable" class="table table-striped mt-3">
+                            <div class="col-md-6 mb-4 deseos">
+                                <div class="card shadow-sm border-0 h-100"
+                                    style="background-color: #F3F9FC; border-radius: 20px;">
+                                    <div class="card-body p-4 text-center">
+                                        <img src="../regalo.gif" alt="Regalos" class="card-img-top mb-3 rounded-circle"
+                                            style="width: 100px; height: 100px;">
+                                        <h3 class="text-center mb-4" style="color: #4A90E2;">Regalos</h3>
+                                        <input type="text" id="regaloInput" class="form-control mb-2 rounded-pill"
+                                            placeholder="Agregar regalo" style="border: 1px solid #4A90E2;">
+                                        <button id="addRegalo" class="btn text-light w-100 rounded-pill"
+                                            style="background-color: #2C3E50;">Agregar Regalo</button>
+                                        <table id="regaloTable" class="table table-hover mt-3">
                                             <thead>
                                                 <tr>
-                                                    <th>Regalos</th>
+                                                    <th style="color: #4A90E2;">Regalos</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -134,42 +154,43 @@
         </section>
 
         <!-- Amigo -->
-        <section class="bg-light py-5" id="amigo">
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-lg-8 col-md-10">
-                        <div class="card shadow-sm border-0">
-                            <div class="card-body">
-                                <h2 class="card-title text-center mb-4 text-uppercase">Información del Amigo Secreto
-                                </h2>
+        <section class="bg-light py-5" id="amigo" style="background-color: #D1E9F6;">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-10">
+                        <h2 class="text-center pb-5 text-uppercase"
+                            style="color: #4A90E2; font-size: 3rem; font-weight: bold;">
+                            Información del Amigo Secreto
+                        </h2>
+                        <div class="card shadow-sm border-0" style="background-color: #F3F9FC; border-radius: 20px;">
+                            <div class="card-body p-4">
                                 <div class="row">
                                     <!-- Información básica del amigo -->
                                     <div class="col-md-12 mb-4">
                                         <div class="d-flex justify-content-between align-items-center">
-                                            <h4 class="">Nombre del Amigo: <span id="amigoNombre" class="text-primary">
-                                                </span></h4>
-                                            <span id="amigoGenero" class="badge bg-secondary">Género</span>
+                                            <h4 class="">Nombre del Amigo: <span id="amigoNombre"
+                                                    class="text-primary"></span></h4>
+                                            <span id="amigoGenero" class="badge"
+                                                style="background-color: #4A90E2; color: #ffffff;">Género</span>
                                         </div>
                                     </div>
-
                                     <!-- Lista de regalos -->
                                     <div class="col-md-6 mb-4">
-                                        <h5 class="text-uppercase text-warning">Regalos</h5>
+                                        <h5 class="text-uppercase" style="color: #4A90E2;">Regalos</h5>
                                         <ul id="amigoRegalos" class="list-group">
                                             <!-- Aquí se agregarán los regalos -->
                                         </ul>
-                                        <div id="noRegalos" class="empty-message text-center mt-2">No hay regalos
-                                            asignados.</div>
+                                        <div id="noRegalos" class="empty-message text-center mt-2"
+                                            style="color: #2C3E50;">No hay regalos asignados.</div>
                                     </div>
-
                                     <!-- Lista de dulces -->
                                     <div class="col-md-6 mb-4">
-                                        <h5 class="text-uppercase text-warning">Dulces</h5>
+                                        <h5 class="text-uppercase" style="color: #4A90E2;">Dulces</h5>
                                         <ul id="amigoDulces" class="list-group">
                                             <!-- Aquí se agregarán los dulces -->
                                         </ul>
-                                        <div id="noDulces" class="empty-message text-center mt-2">No hay dulces
-                                            asignados.</div>
+                                        <div id="noDulces" class="empty-message text-center mt-2"
+                                            style="color: #2C3E50;">No hay dulces asignados.</div>
                                     </div>
                                 </div>
                             </div>
@@ -290,7 +311,7 @@
 
                                 // Actualiza la lista de regalos
                                 const regaloList = $('#amigoRegalos');
-                                regaloList.empty(); // Limpia la lista antes de agregar nuevos elementos
+                                regaloList.empty();
                                 if (regalos.length > 0) {
                                     regalos.forEach(regalo => {
                                         regaloList.append(`<li class="list-group-item">${regalo}</li>`);
@@ -302,14 +323,14 @@
 
                                 // Actualiza la lista de dulces
                                 const dulceList = $('#amigoDulces');
-                                dulceList.empty(); // Limpia la lista antes de agregar nuevos elementos
+                                dulceList.empty();
                                 if (dulces.length > 0) {
                                     dulces.forEach(dulce => {
                                         dulceList.append(`<li class="list-group-item">${dulce}</li>`);
                                     });
-                                    $('#noDulces').hide(); // Oculta el mensaje de vacío si hay dulces
+                                    $('#noDulces').hide();
                                 } else {
-                                    $('#noDulces').show(); // Muestra el mensaje de vacío si no hay dulces
+                                    $('#noDulces').show();
                                 }
                             } else {
                                 $('#amigoNombre').text('No se ha asignado un amigo secreto aún.');
