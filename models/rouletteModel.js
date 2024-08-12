@@ -3,11 +3,12 @@ const connection = require('../config/db');
 const UserModel = {
     getRandomUser: (excludeUserId, callback) => {
         const query = `
-            SELECT id_usuario, nombre, genero 
-            FROM usuarios
-            WHERE id_usuario != ?
+            SELECT u.id_usuario, u.nombre, u.genero, a.nombre AS area
+            FROM usuarios u
+            JOIN agencias a ON u.area = a.cu
+            WHERE u.id_usuario != ?
             ORDER BY RAND()
-            LIMIT 1
+            LIMIT 1;
         `;
         connection.query(query, [excludeUserId], (err, results) => {
             if (err) return callback(err);
@@ -17,20 +18,13 @@ const UserModel = {
 };
 
 const AmigoSecretoModel = {
-    saveAmigoSecreto: (userId, amigoId, callback) => {
-        const query = 'INSERT INTO amigos_secreto (id_usuario, id_amigo_secreto) VALUES (?, ?)';
-        connection.query(query, [userId, amigoId], (err, results) => {
-            if (err) return callback(err);
-            callback(null, results);
-        });
-    },
-
     getAmigo: (userId, callback) => {
         const query = `
-            SELECT u.id_usuario, u.nombre, u.genero
-            FROM amigos_secreto AS a
-            INNER JOIN usuarios AS u ON u.id_usuario = a.id_amigo_secreto
-            WHERE a.id_usuario = ?
+            SELECT u.id_usuario, u.nombre, u.primer_apellido, u.segundo_apellido, u.genero, a.nombre AS area
+            FROM amigos_secreto am
+            JOIN usuarios u ON am.id_amigo_secreto = u.id_usuario
+            JOIN agencias a ON u.area = a.cu
+            WHERE am.id_usuario = ?;
         `;
         connection.query(query, [userId], (err, results) => {
             if (err) return callback(err);
@@ -39,7 +33,7 @@ const AmigoSecretoModel = {
     },
 
     getRegalos: (userId, callback) => {
-        const query = 'SELECT regalo FROM regalos WHERE id_usuario_fk = ?';
+        const query = `SELECT regalo FROM regalos WHERE id_usuario_fk = ?;`;
         connection.query(query, [userId], (err, results) => {
             if (err) return callback(err);
             callback(null, results);
@@ -47,10 +41,18 @@ const AmigoSecretoModel = {
     },
 
     getDulces: (userId, callback) => {
-        const query = 'SELECT dulce FROM dulces WHERE id_usuario_fk = ?';
+        const query = `SELECT dulce FROM dulces WHERE id_usuario_fk = ?;`;
         connection.query(query, [userId], (err, results) => {
             if (err) return callback(err);
             callback(null, results);
+        });
+    },
+
+    saveAmigoSecreto: (userId, amigoId, callback) => {
+        const query = `INSERT INTO amigos_secreto (id_usuario, id_amigo_secreto) VALUES (?, ?);`;
+        connection.query(query, [userId, amigoId], (err, result) => {
+            if (err) return callback(err);
+            callback(null, result);
         });
     }
 };

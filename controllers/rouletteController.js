@@ -3,22 +3,34 @@ const { UserModel, AmigoSecretoModel } = require('../models/rouletteModel');
 exports.assignAmigoSecreto = (req, res) => {
     const userId = req.session.id_usuario;
 
-    UserModel.getRandomUser(userId, (err, amigo) => {
+    AmigoSecretoModel.getAmigo(userId, (err, existingAmigo) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ success: false, message: 'Error al asignar amigo secreto' });
+            return res.status(500).json({ success: false, message: 'Error al verificar el amigo secreto' });
         }
 
-        AmigoSecretoModel.saveAmigoSecreto(userId, amigo.id_usuario, (err, result) => {
+        if (existingAmigo) {
+            return res.json({ success: false, message: 'Ya tienes un amigo asignado' });
+        }
+
+        UserModel.getRandomUser(userId, (err, amigo) => {
             if (err) {
                 console.error(err);
-                return res.status(500).json({ success: false, message: 'Error al guardar amigo secreto' });
+                return res.status(500).json({ success: false, message: 'Error al asignar amigo secreto' });
             }
 
-            res.json({ success: true, amigo });
+            AmigoSecretoModel.saveAmigoSecreto(userId, amigo.id_usuario, (err, result) => {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ success: false, message: 'Error al guardar amigo secreto' });
+                }
+
+                res.json({ success: true, amigo });
+            });
         });
     });
 };
+
 
 exports.getAmigoPreferences = (req, res) => {
     const userId = req.session.id_usuario;
@@ -33,25 +45,25 @@ exports.getAmigoPreferences = (req, res) => {
             return res.status(404).json({ success: false, message: 'No se encontró el amigo secreto' });
         }
 
-        // Obtener regalos del amigo secreto
         AmigoSecretoModel.getRegalos(amigo.id_usuario, (err, regalos) => {
             if (err) {
                 console.error(err);
                 return res.status(500).json({ success: false, message: 'Error al obtener los regalos del amigo secreto' });
             }
 
-            // Obtener dulces del amigo secreto
             AmigoSecretoModel.getDulces(amigo.id_usuario, (err, dulces) => {
                 if (err) {
                     console.error(err);
                     return res.status(500).json({ success: false, message: 'Error al obtener los dulces del amigo secreto' });
                 }
 
-                // Responder con toda la información
                 res.json({
                     success: true,
                     amigo: {
-                        ...amigo,
+                        nombre: amigo.nombre,
+                        primer_apellido: amigo.primer_apellido,
+                        segundo_apellido: amigo.segundo_apellido,
+                        area: amigo.area,  // Este campo se reemplazará con el nombre de la agencia
                         regalos: regalos.map(r => r.regalo),
                         dulces: dulces.map(d => d.dulce)
                     }

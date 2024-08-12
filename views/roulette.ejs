@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruleta - Amigo Secreto</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -22,23 +23,28 @@
         .wheel {
             width: 300px;
             height: 300px;
-            border-radius: 15px;
-            border: 8px solid #4A90E2;
-            position: relative;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 8px solid #4A90E2;
+            border-radius: 10px;
+            position: relative;
             background-color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
         }
 
-        .wheel img {
+        .wheel-strip {
             position: absolute;
-            bottom: 0;
             width: 100%;
-            height: auto;
-            transform: translateY(100%);
+            height: 100%;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .wheel-strip img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .spin-btn {
@@ -96,18 +102,18 @@
             border-bottom: none;
         }
 
-        @keyframes bounce {
-            0% {
-                transform: translateY(100%);
+        @keyframes scrollUp {
+            from {
+                top: 0;
             }
 
-            50% {
-                transform: translateY(-20%);
+            to {
+                top: -400%;
             }
+        }
 
-            100% {
-                transform: translateY(100%);
-            }
+        .scrolling {
+            animation: scrollUp 5s ease-in-out forwards;
         }
     </style>
 </head>
@@ -115,153 +121,161 @@
 <body>
     <%- include('../partials/navbar'); %>
 
-    <section>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <h1 class="my-5">¡Gira la Ruleta para Asignar a tu Amigo Secreto!</h1>
-                </div>
-            </div>
-            <div class="row wheel-container">
-                <div class="wheel" id="wheel">
-                    <img id="wheelImage" src="../regalos.jpg" alt="Ruleta">
-                </div>
-            </div>
-            <div class="row spin-btn">
-                <button class="btn" id="spinButton">Girar Ruleta</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal para mostrar el amigo secreto -->
-    <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="resultModalLabel">Amigo Secreto Asignado</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="text-center mb-4">
-                        <h4 id="userName" class="mb-2"></h4>
-                        <p id="userInfo" class="text-muted"></p>
+        <section>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 text-center">
+                        <h1 class="display-4 fw-bold">🎁 ¡Gira la Ruleta y Descubre a tu <span class="fw-bold"
+                                style="color: #357ABD;">Amigo Secreto</span>! 🎁</h1>
+                        <p class="lead">Haz clic en el botón <span class="fw-bold" style="color: #357ABD;">"Girar
+                                Ruleta"</span> para comenzar la emoción</p>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <h5 class="text-primary">Preferencias de Dulces:</h5>
-                            <ul id="dulcesList" class="list-group">
-                                <!-- Aquí se agregarán los dulces -->
-                            </ul>
-                            <div id="noDulces" class="text-center mt-2 text-muted" style="display: none;">No hay preferencias de dulces.</div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <h5 class="text-primary">Preferencias de Regalos:</h5>
-                            <ul id="regalosList" class="list-group">
-                                <!-- Aquí se agregarán los regalos -->
-                            </ul>
-                            <div id="noRegalos" class="text-center mt-2 text-muted" style="display: none;">No hay preferencias de regalos.</div>
+                </div>
+                <div class="row justify-content-center wheel-container">
+                    <div class="wheel shadow-lg bg-white" id="wheel">
+                        <div class="wheel-strip" id="wheelStrip">
+                            <img src="../studio.png" alt="Ruleta">
+                            <img src="../studio.png" alt="Ruleta">
+                            <img src="../studio.png" alt="Ruleta">
+                            <img src="../studio.png" alt="Ruleta">
+                            <img src="../studio.png" alt="Ruleta">
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <div class="row justify-content-center spin-btn">
+                    <div class="col-md-8 justify-content-center d-flex">
+                        <button class="btn btn-lg fw-bold shadow" id="spinButton">Girar Ruleta</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal para mostrar el amigo secreto -->
+        <div class="modal fade" id="resultModal" tabindex="-1" aria-labelledby="resultModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="resultModalLabel">Amigo Secreto Asignado</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="text-center mb-4">
+                            <h4 id="userName" class="mb-2"></h4>
+                            <p id="userInfo" class="text-muted"></p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <h5 class="text-primary">Preferencias de Dulces:</h5>
+                                <ul id="dulcesList" class="list-group">
+                                    <!-- Aquí se agregarán los dulces -->
+                                </ul>
+                                <div id="noDulces" class="text-center mt-2 text-muted" style="display: none;">No hay
+                                    preferencias de dulces.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <h5 class="text-primary">Preferencias de Regalos:</h5>
+                                <ul id="regalosList" class="list-group">
+                                    <!-- Aquí se agregarán los regalos -->
+                                </ul>
+                                <div id="noRegalos" class="text-center mt-2 text-muted" style="display: none;">No hay
+                                    preferencias de regalos.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <%- include('../partials/footer'); %>
+        <%- include('../partials/footer'); %>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#spinButton').click(function () {
-                const wheelImage = $('#wheelImage');
+            <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#spinButton').click(function () {
+                        $.post('/roulette/assign', function (response) {
+                            if (!response.success && response.message === 'Ya tienes un amigo asignado') {
+                                Swal.fire({
+                                    icon: 'info',
+                                    title: 'Amigo Asignado',
+                                    text: 'Ya tienes un amigo secreto asignado. No puedes volver a girar la ruleta.',
+                                    confirmButtonColor: '#4A90E2',
+                                });
+                                return;
+                            }
 
-                // Remueve cualquier animación previa
-                wheelImage.css('animation', 'none');
+                            const wheelStrip = $('#wheelStrip');
+                            wheelStrip.removeClass('scrolling');
+                            void wheelStrip.offsetWidth;
+                            wheelStrip.addClass('scrolling');
 
-                // Inicia la animación cuando se hace clic en el botón
-                setTimeout(function () {
-                    wheelImage.css('animation', 'bounce 2s infinite');
-                }, 10);
+                            setTimeout(function () {
+                                if (response.success) {
+                                    $.ajax({
+                                        url: '/roulette/amigo-preferencias',
+                                        method: 'GET',
+                                        success: function (response) {
+                                            if (response.success) {
+                                                const amigo = response.amigo;
+                                                if (amigo) {
+                                                    $('#userName').text(`${amigo.nombre} ${amigo.primer_apellido} ${amigo.segundo_apellido}`);
+                                                    $('#userInfo').html(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'} - Área: ${amigo.area}`);
 
-                setTimeout(function () {
-                    $.post('/roulette/assign', function (response) {
-                        if (response.success) {
-                            // Realiza una solicitud AJAX para obtener las preferencias del amigo
-                            $.ajax({
-                                url: '/roulette/amigo-preferencias',
-                                method: 'GET',
-                                success: function (response) {
-                                    if (response.success) {
-                                        const amigo = response.amigo;
-                                        if (amigo) {
-                                            // Mostrar la modal con la información del amigo
-                                            $('#userName').text(amigo.nombre);
-                                            $('#userInfo').html(`Género: ${amigo.genero}`);
+                                                    let regalos = amigo.regalos || [];
+                                                    let dulces = amigo.dulces || [];
 
-                                            // Verificar y convertir los campos regalos y dulces
-                                            let regalos = amigo.regalos || [];
-                                            let dulces = amigo.dulces || [];
+                                                    if (typeof regalos === 'string') {
+                                                        regalos = regalos.split(',');
+                                                    }
 
-                                            // Si no son arrays, convertirlos en arrays
-                                            if (typeof regalos === 'string') {
-                                                regalos = regalos.split(',');
-                                            }
+                                                    if (typeof dulces === 'string') {
+                                                        dulces = dulces.split(',');
+                                                    }
 
-                                            if (typeof dulces === 'string') {
-                                                dulces = dulces.split(',');
-                                            }
+                                                    $('#regalosList').empty();
+                                                    $('#dulcesList').empty();
 
-                                            // Limpiar y llenar las listas de regalos y dulces
-                                            $('#regalosList').empty();
-                                            $('#dulcesList').empty();
+                                                    if (regalos.length) {
+                                                        regalos.forEach(function (regalo) {
+                                                            $('#regalosList').append(`<li class="list-group-item">${regalo}</li>`);
+                                                        });
+                                                        $('#noRegalos').hide();
+                                                    } else {
+                                                        $('#noRegalos').show();
+                                                    }
 
-                                            // Mostrar u ocultar los mensajes de no hay preferencias
-                                            if (regalos.length) {
-                                                regalos.forEach(function (regalo) {
-                                                    $('#regalosList').append(`<li class="list-group-item">${regalo}</li>`);
-                                                });
-                                                $('#noRegalos').hide();
+                                                    if (dulces.length) {
+                                                        dulces.forEach(function (dulce) {
+                                                            $('#dulcesList').append(`<li class="list-group-item">${dulce}</li>`);
+                                                        });
+                                                        $('#noDulces').hide();
+                                                    } else {
+                                                        $('#noDulces').show();
+                                                    }
+
+                                                    $('#resultModal').modal('show');
+                                                } else {
+                                                    console.error('No se encontró información del amigo asignado.');
+                                                }
                                             } else {
-                                                $('#noRegalos').show();
+                                                console.error('Error al obtener las preferencias del amigo.');
                                             }
-
-                                            if (dulces.length) {
-                                                dulces.forEach(function (dulce) {
-                                                    $('#dulcesList').append(`<li class="list-group-item">${dulce}</li>`);
-                                                });
-                                                $('#noDulces').hide();
-                                            } else {
-                                                $('#noDulces').show();
-                                            }
-
-                                            // Mostrar la modal
-                                            $('#resultModal').modal('show');
-                                        } else {
-                                            console.error("No se encontró información del amigo.");
+                                        },
+                                        error: function () {
+                                            console.error('Error en la solicitud para obtener las preferencias del amigo.');
                                         }
-                                    } else {
-                                        console.error("Error al obtener las preferencias del amigo:", response.message);
-                                    }
-                                },
-                                error: function (jqXHR, textStatus, errorThrown) {
-                                    console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+                                    });
+                                } else {
+                                    console.error('Error al asignar amigo secreto.');
                                 }
-                            });
-
-                        } else {
-                            alert('Hubo un error al asignar tu amigo secreto.');
-                        }
-                    }).fail(function () {
-                        alert('Hubo un error en la comunicación con el servidor.');
+                            }, 5000);
+                        });
                     });
-                }, 4000);
-            });
-        });
-    </script>
+                });
+            </script>
 </body>
 
 </html>

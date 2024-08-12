@@ -1,4 +1,3 @@
-// preferencesController.js
 const { DulceModel, RegaloModel } = require('../models/preferencesModel');
 
 exports.addDulce = (req, res) => {

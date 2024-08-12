@@ -5,7 +5,7 @@ exports.login = (req, res) => {
     const { usuario, contraseña } = req.body;
 
     if (usuario && contraseña) {
-        UserModel.findByUsername(usuario, (err, results) => {
+        UserModel.findByCedula(usuario, (err, results) => {
             if (err) return res.status(500).json({ success: false, message: 'Error del servidor' });
 
             if (results.length > 0) {
@@ -17,7 +17,9 @@ exports.login = (req, res) => {
                     if (isMatch) {
                         req.session.loggedin = true;
                         req.session.nombre = user.nombre;
-                        req.session.usuario = user.usuario;
+                        req.session.cedula = user.cedula;
+                        req.session.primer_apellido = user.primer_apellido;
+                        req.session.segundo_apellido = user.segundo_apellido;
                         req.session.rol = user.rol;
                         req.session.id_usuario = user.id_usuario;
 
@@ -52,7 +54,11 @@ exports.admindashboard = (req, res) => {
 
 exports.userdashboard = (req, res) => {
     if (req.session.loggedin) {
-        res.render('user', { nombre: req.session.nombre });
+        res.render('user', {
+            nombre: req.session.nombre,
+            primer_apellido: req.session.primer_apellido,
+            segundo_apellido: req.session.segundo_apellido
+        });
     } else {
         res.send('Por favor inicie sesión para ver esta página.');
     }

@@ -2,8 +2,8 @@ const bcrypt = require('bcryptjs');
 const connection = require('../config/db');
 
 const UserModel = {
-    findByUsername: (username, callback) => {
-        connection.query('SELECT * FROM usuarios WHERE usuario = ?', [username], (err, results) => {
+    findByCedula: (cedula, callback) => {
+        connection.query('SELECT * FROM usuarios WHERE cedula = ?', [cedula], (err, results) => {
             if (err) return callback(err);
             callback(null, results);
         });
