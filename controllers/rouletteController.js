@@ -31,7 +31,6 @@ exports.assignAmigoSecreto = (req, res) => {
     });
 };
 
-
 exports.getAmigoPreferences = (req, res) => {
     const userId = req.session.id_usuario;
 

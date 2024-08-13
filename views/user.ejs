@@ -10,6 +10,7 @@
     <link href="/css/styles.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.3/css/dataTables.bootstrap5.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body id="page-top">
@@ -73,6 +74,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="color: #4A90E2;">Dulces</th>
+                                                    <th style="color: #4A90E2;">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -98,6 +100,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="color: #4A90E2;">Regalos</th>
+                                                    <th style="color: #4A90E2;">Acciones</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -162,10 +165,9 @@
             </div>
         </section>
 
-
         <!-- Footer-->
         <%- include('../partials/footer'); %>
-
+        
             <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
             <script
                 src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -181,7 +183,11 @@
                         },
                         info: false,
                         paging: false,
-                        searching: false
+                        searching: false,
+                        columns: [
+                            { title: "Dulces" },
+                            { title: "Acciones", orderable: false, searchable: false }
+                        ]
                     });
 
                     const regaloTable = $('#regaloTable').DataTable({
@@ -190,7 +196,11 @@
                         },
                         info: false,
                         paging: false,
-                        searching: false
+                        searching: false,
+                        columns: [
+                            { title: "Regalos" },
+                            { title: "Acciones", orderable: false, searchable: false }
+                        ]
                     });
 
                     // Función para agregar dulce
@@ -199,7 +209,10 @@
                         if (dulce) {
                             $.post('/preferences/dulces', { dulce: dulce }, function (response) {
                                 if (response.success) {
-                                    dulceTable.row.add([dulce]).draw();
+                                    dulceTable.row.add([
+                                        dulce,
+                                        `<button class="btn btn-danger btn-sm delete-dulce" data-id="${response.id}">Eliminar</button>`
+                                    ]).draw();
                                     $('#dulceInput').val('');
                                 } else {
                                     alert(response.message);
@@ -216,7 +229,10 @@
                         if (regalo) {
                             $.post('/preferences/regalos', { regalo: regalo }, function (response) {
                                 if (response.success) {
-                                    regaloTable.row.add([regalo]).draw();
+                                    regaloTable.row.add([
+                                        regalo,
+                                        `<button class="btn btn-danger btn-sm delete-regalo" data-id="${response.id}">Eliminar</button>`
+                                    ]).draw();
                                     $('#regaloInput').val('');
                                 } else {
                                     alert(response.message);
@@ -227,31 +243,82 @@
                         }
                     });
 
-                    // Función para obtener y mostrar dulces
-                    $.get('/preferences/dulces', function (response) {
-                        if (response.success) {
-                            if (response.dulces.length > 0) {
-                                response.dulces.forEach(dulce => {
-                                    dulceTable.row.add([dulce.dulce]).draw();
-                                });
-                            }
-                        } else {
-                            console.error('Error al cargar dulces:', response.message);
+                    // Manejar la eliminación de dulces
+                    $('#dulceTable tbody').on('click', '.delete-dulce', function () {
+                        const button = $(this);
+                        const dulceId = button.data('id');
+
+                        console.log('ID del dulce a eliminar:', dulceId);
+
+                        if (confirm('¿Está seguro de que desea eliminar este dulce?')) {
+                            $.ajax({
+                                url: `/preferences/dulces/${dulceId}`,
+                                type: 'DELETE',
+                                success: function (response) {
+                                    if (response.success) {
+                                        dulceTable.row(button.parents('tr')).remove().draw();
+                                    } else {
+                                        alert('Error al eliminar el dulce');
+                                    }
+                                },
+                                error: function () {
+                                    alert('Error en la solicitud');
+                                }
+                            });
                         }
                     });
 
-                    // Función para obtener y mostrar regalos
-                    $.get('/preferences/regalos', function (response) {
-                        if (response.success) {
-                            if (response.regalos.length > 0) {
-                                response.regalos.forEach(regalo => {
-                                    regaloTable.row.add([regalo.regalo]).draw();
-                                });
-                            }
-                        } else {
-                            console.error('Error al cargar regalos:', response.message);
+                    // Manejar la eliminación de regalos
+                    $('#regaloTable tbody').on('click', '.delete-regalo', function () {
+                        const button = $(this);
+                        const regaloId = button.data('id');
+
+                        if (confirm('¿Está seguro de que desea eliminar este regalo?')) {
+                            $.ajax({
+                                url: `/preferences/regalos/${regaloId}`,
+                                type: 'DELETE',
+                                success: function (response) {
+                                    if (response.success) {
+                                        regaloTable.row(button.parents('tr')).remove().draw();
+                                    } else {
+                                        alert('Error al eliminar el regalo');
+                                    }
+                                },
+                                error: function () {
+                                    alert('Error en la solicitud');
+                                }
+                            });
                         }
                     });
+
+                    // Función para cargar dulces y regalos desde el servidor
+                    function loadDulces() {
+                        $.get('/preferences/dulces', function (response) {
+                            if (response.success) {
+                                response.dulces.forEach(dulce => {
+                                    dulceTable.row.add([
+                                        dulce.dulce,
+                                        `<button class="btn btn-danger btn-sm delete-dulce" data-id="${dulce.id_dulce}">Eliminar</button>`
+                                    ]).draw();
+                                });
+                            }
+                        });
+                    }
+
+                    function loadRegalos() {
+                        $.get('/preferences/regalos', function (response) {
+                            if (response.success) {
+                                response.regalos.forEach(regalo => {
+                                    regaloTable.row.add([
+                                        regalo.regalo,
+                                        `<button class="btn btn-danger btn-sm delete-regalo" data-id="${regalo.id_regalo}">Eliminar</button>`
+                                    ]).draw();
+                                });
+                            }
+                        });
+                    }
+                    loadDulces();
+                    loadRegalos();
                 });
             </script>
             <script>
@@ -263,21 +330,28 @@
                             if (data.success && data.amigo) {
                                 const amigo = data.amigo;
 
-                                // Actualiza el nombre y género del amigo con un prefijo
+                                // Actualiza el nombre del amigo
                                 $('#amigoNombre').text(`${amigo.nombre} ${amigo.primer_apellido} ${amigo.segundo_apellido}`);
-                                $('#amigoGenero').text(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'}`);
-                                $('#amigoArea').text(`Área: ${amigo.area}`)
 
-                                // Asegúrate de que regalos y dulces sean arrays
-                                const regalos = Array.isArray(amigo.regalos) ? amigo.regalos : [];
-                                const dulces = Array.isArray(amigo.dulces) ? amigo.dulces : [];
+                                // Muestra el badge de género si está disponible
+                                if (amigo.genero) {
+                                    $('#amigoGenero').text(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'}`).show();
+                                } else {
+                                    $('#amigoGenero').hide();
+                                }
+
+                                // Muestra el badge de área si está disponible
+                                if (amigo.area) {
+                                    $('#amigoArea').text(`Área: ${amigo.area}`).show();
+                                } else {
+                                    $('#amigoArea').hide();
+                                }
 
                                 // Actualiza la lista de regalos
-                                const regaloList = $('#amigoRegalos');
-                                regaloList.empty();
+                                const regalos = amigo.regalos || [];
                                 if (regalos.length > 0) {
                                     regalos.forEach(regalo => {
-                                        regaloList.append(`<li class="list-group-item">${regalo}</li>`);
+                                        $('#amigoRegalos').append(`<li class="list-group-item">${regalo}</li>`);
                                     });
                                     $('#noRegalos').hide();
                                 } else {
@@ -285,25 +359,26 @@
                                 }
 
                                 // Actualiza la lista de dulces
-                                const dulceList = $('#amigoDulces');
-                                dulceList.empty();
+                                const dulces = amigo.dulces || [];
                                 if (dulces.length > 0) {
                                     dulces.forEach(dulce => {
-                                        dulceList.append(`<li class="list-group-item">${dulce}</li>`);
+                                        $('#amigoDulces').append(`<li class="list-group-item">${dulce}</li>`);
                                     });
                                     $('#noDulces').hide();
                                 } else {
                                     $('#noDulces').show();
                                 }
                             } else {
-                                $('#amigoNombre').text('No se ha asignado un amigo secreto aún.');
-                                $('#amigoGenero').text('');
+                                // Oculta los badges si no hay datos
+                                $('#amigoGenero').hide();
+                                $('#amigoArea').hide();
                             }
                         })
-                        .catch(err => {
-                            console.error('Error al cargar la información del amigo:', err);
-                            $('#amigoNombre').text('Hubo un error al cargar la información del amigo.');
-                            $('#amigoGenero').text('');
+                        .catch(error => {
+                            console.error('Error al cargar la información del amigo:', error);
+                            // Oculta los badges si hay un error
+                            $('#amigoGenero').hide();
+                            $('#amigoArea').hide();
                         });
                 });
             </script>
