@@ -62,7 +62,7 @@ exports.getAmigoPreferences = (req, res) => {
                         nombre: amigo.nombre,
                         primer_apellido: amigo.primer_apellido,
                         segundo_apellido: amigo.segundo_apellido,
-                        area: amigo.area,  // Este campo se reemplazará con el nombre de la agencia
+                        area: amigo.area,
                         regalos: regalos.map(r => r.regalo),
                         dulces: dulces.map(d => d.dulce)
                     }
