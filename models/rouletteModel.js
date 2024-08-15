@@ -1,16 +1,17 @@
 const connection = require('../config/db');
 
 const UserModel = {
-    getRandomUser: (excludeUserId, callback) => {
+    getRandomUser: (excludeUserId, userGender, callback) => {
+        const oppositeGender = userGender === 'M' ? 'F' : 'M';
         const query = `
             SELECT u.id_usuario, u.nombre, u.genero, a.nombre AS area
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
-            WHERE u.id_usuario != ?
+            WHERE u.id_usuario != ? AND u.genero = ?
             ORDER BY RAND()
             LIMIT 1;
         `;
-        connection.query(query, [excludeUserId], (err, results) => {
+        connection.query(query, [excludeUserId, oppositeGender], (err, results) => {
             if (err) return callback(err);
             callback(null, results[0]);
         });

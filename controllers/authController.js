@@ -29,6 +29,7 @@ exports.login = (req, res) => {
                         req.session.primer_apellido = user.primer_apellido;
                         req.session.segundo_apellido = user.segundo_apellido;
                         req.session.rol = user.rol;
+                        req.session.genero = user.genero;
                         req.session.id_usuario = user.id_usuario;
 
                         let redirectUrl = '/home';

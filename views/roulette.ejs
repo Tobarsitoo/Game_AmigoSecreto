@@ -221,6 +221,7 @@
                                             if (response.success) {
                                                 const amigo = response.amigo;
                                                 if (amigo) {
+                                                    console.log('Amigo para mostrar:', amigo);
                                                     $('#userName').text(`${amigo.nombre} ${amigo.primer_apellido} ${amigo.segundo_apellido}`);
                                                     $('#userInfo').html(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'} - Área: ${amigo.area}`);
 
