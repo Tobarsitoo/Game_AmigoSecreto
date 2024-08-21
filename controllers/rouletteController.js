@@ -1,6 +1,7 @@
 const { UserModel, AmigoSecretoModel } = require('../models/rouletteModel');
 const AuditModel = require('../models/auditModel');
 
+// Controlador para asignar amigo secreto
 exports.assignAmigoSecreto = (req, res) => {
     const userId = req.session.id_usuario;
     const userGender = req.session.genero;
@@ -41,6 +42,7 @@ exports.assignAmigoSecreto = (req, res) => {
     });
 };
 
+// Controlador para traer información del amigo secreto
 exports.getAmigoPreferences = (req, res) => {
     const userId = req.session.id_usuario;
 

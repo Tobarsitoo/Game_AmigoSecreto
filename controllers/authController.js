@@ -1,6 +1,5 @@
 const UserModel = require('../models/userModel');
 const AuditModel = require('../models/auditModel');
-const path = require('path');
 
 exports.login = (req, res) => {
     const { usuario, contraseña } = req.body;
@@ -58,7 +57,7 @@ exports.login = (req, res) => {
 
 exports.admindashboard = (req, res) => {
     if (req.session.loggedin && req.session.rol === 'administrador') {
-        res.send(`Bienvenido, administrador: ${req.session.nombre}!`);
+        res.render('admin');
     } else {
         res.redirect('/');
     }

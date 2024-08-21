@@ -50,10 +50,20 @@ const AmigoSecretoModel = {
     },
 
     saveAmigoSecreto: (userId, amigoId, callback) => {
-        const query = `INSERT INTO amigos_secreto (id_usuario, id_amigo_secreto) VALUES (?, ?);`;
-        connection.query(query, [userId, amigoId], (err, result) => {
+        const insertQuery = `INSERT INTO amigos_secreto (id_usuario, id_amigo_secreto) VALUES (?, ?);`;
+        const updateQuery = `UPDATE usuarios SET emparejado = 1 WHERE id_usuario = ?;`;
+
+        connection.query(insertQuery, [userId, amigoId], (err, result) => {
             if (err) return callback(err);
-            callback(null, result);
+
+            connection.query(updateQuery, [userId], (err, result1) => {
+                if (err) return callback(err);
+
+                connection.query(updateQuery, [amigoId], (err, result2) => {
+                    if (err) return callback(err);
+                    callback(null, { insertResult: result, updateResult1: result1, updateResult2: result2 });
+                });
+            });
         });
     }
 };

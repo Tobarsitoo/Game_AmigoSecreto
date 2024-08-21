@@ -8,7 +8,6 @@ router.get('/', (req, res) => {
 });
 
 router.post('/assign', isAuthenticated, rouletteController.assignAmigoSecreto);
-
 router.get('/amigo-preferencias', isAuthenticated, rouletteController.getAmigoPreferences);
 
 module.exports = router;
