@@ -6,6 +6,7 @@ const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const preferencesRoutes = require('./routes/preferencesRoutes');
 const rouletteRoutes = require('./routes/rouletteRoutes');
+const adminRoutes = require('./routes/adminRoutes');
 
 const PORT = process.env.SERVER_PORT;
 
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', authRoutes);
 app.use('/preferences', preferencesRoutes);
 app.use('/roulette', rouletteRoutes);
+app.use('/admin', adminRoutes);
 
 app.listen(PORT, () => {
   console.log(`Servidor funcionando y corriendo en: http://localhost:${PORT}`);
