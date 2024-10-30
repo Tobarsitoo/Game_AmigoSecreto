@@ -3,7 +3,7 @@ const router = express.Router();
 const rouletteController = require('../controllers/rouletteController');
 const { isAuthenticated } = require('../middleware/auth');
 
-router.get('/', (req, res) => {
+router.get('/', isAuthenticated, (req, res) => {
     res.render('roulette'); 
 });
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const AuditModel = require('../models/auditModel');
+const { isAuthenticated } = require('../middleware/auth');
 const path = require('path');
 
 router.get('/', (req, res) => {
@@ -9,8 +10,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/login', authController.login);
-router.get('/admin-dashboard', authController.admindashboard);
-router.get('/usuario-dashboard', authController.userdashboard);
+router.get('/admin-dashboard', isAuthenticated, authController.admindashboard);
+router.get('/usuario-dashboard', isAuthenticated , authController.userdashboard);
 router.get('/logout', (req, res) => {
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) === '::1' ? '127.0.0.1' : req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
