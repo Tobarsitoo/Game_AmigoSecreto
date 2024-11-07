@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const preferencesRoutes = require('./routes/preferencesRoutes');
 const rouletteRoutes = require('./routes/rouletteRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const registerRoutes = require('./routes/registerRoutes');
 
 const PORT = process.env.SERVER_PORT;
 
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'src/img')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', authRoutes);
+app.use('/', registerRoutes);
 app.use('/preferences', preferencesRoutes);
 app.use('/roulette', rouletteRoutes);
 app.use('/admin', adminRoutes);

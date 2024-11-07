@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+    <title>Formulario de Inscripción</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 text-center mb-2">
+                    <h2 class="heading-section">🎁 Inscripción Amigo Secreto 🎁</h2>
+                    <p class="text-muted">Este formulario de inscripción <strong>SOLO</strong> es valido para
+                        <strong>NOMBRADOS</strong>
+                    </p>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-5">
+                    <div class="login-wrap p-4 p-md-5">
+                        <div class="text-center mb-3">
+                            <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
+                                alt="Logo" class="logo" style="width: 70%; height: auto;">
+                        </div>
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <span class="fa fa-user-o"></span>
+                        </div>
+                        <h3 class="text-center mb-4">Ingresa tus datos</h3>
+                        <form id="cedulaForm" class="login-form">
+                            <div class="form-group">
+                                <label for="cedula">Cédula</label>
+                                <input type="number" class="form-control rounded-left" id="cedula"
+                                    placeholder="Ingreses su cédula" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control rounded-left" id="fechaNacimiento" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaExpedicion">Fecha de Expedición</label>
+                                <input type="date" class="form-control rounded-left" id="fechaExpedicion" required>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Verificar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div id="asociadoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="asociadoModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="asociadoModalLabel">Información del Asociado</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="asociadoForm">
+                            <div class="form-group">
+                                <label for="nombreAsociado">Nombre</label>
+                                <input type="text" class="form-control" id="nombreAsociado" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="nominaAsociado">Nómina</label>
+                                <input type="text" class="form-control" id="nominaAsociado" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="agenciaAsociado">Agencia</label>
+                                <input type="text" class="form-control" id="agenciaAsociado" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="generoAsociado">Género</label>
+                                <select class="form-control" id="generoAsociado" required>
+                                    <option value="" disabled selected>Seleccione una opción</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary" id="guardarAsociadoBtn">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('cedulaForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // Evitar el envío del formulario
+
+            const cedula = document.getElementById('cedula').value;
+            const fechaNacimiento = document.getElementById('fechaNacimiento').value;
+            const fechaExpedicion = document.getElementById('fechaExpedicion').value;
+
+            // Convertir las fechas a formato AAAAMMDD
+            const fechaNacimientoFormat = fechaNacimiento.replace(/-/g, '');
+            const fechaExpedicionFormat = fechaExpedicion.replace(/-/g, '');
+
+            // Validar que las fechas estén en formato AAAAMMDD
+            const fechaRegex = /^\d{8}$/;
+            if (!fechaRegex.test(fechaNacimientoFormat) || !fechaRegex.test(fechaExpedicionFormat)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Formato de Fecha Incorrecto',
+                    text: 'Por favor, ingresa las fechas en el formato correcto (AAAAMMDD).',
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#D9534F'
+                });
+                return;
+            }
+
+            // URL de la API renderizada desde la ruta
+            const apiUrl = `<%= apiUrl %>/nombre/${cedula}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const apiRetiro = data.asociado.RETIRO;
+                    const apiNombre = data.asociado.NOMBRES;
+                    const apiNomina = data.asociado.NOMNOMINA;
+                    const apiAgencia = data.asociado.AGENCIA
+
+                    if (apiRetiro === '0') {
+                        document.getElementById('nombreAsociado').value = apiNombre;
+                        document.getElementById('nominaAsociado').value = apiNomina;
+                        document.getElementById('agenciaAsociado').value = apiAgencia;
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: `¡Hola, ${apiNombre}!`,
+                            text: 'Ya estás verificado. Continua llenando la siguiente información.',
+                            confirmButtonText: 'Continuar',
+                            confirmButtonColor: '#067063'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('#asociadoModal').modal('show');
+                            }
+                        });
+                    }
+                });
+        });
+        document.getElementById('guardarAsociadoBtn').addEventListener('submit', function () {
+            Swal.fire({
+                icon: 'success',
+                title: 'Guardado',
+                text: 'Tú información ha sido guardada correctamente. Ya puedes jugar Amigo Secreto',
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#067063'
+            }).then(() => {
+                $('#asociadoModal').modal('hide');
+            });
+        });
+    </script>
+</body>
+
+</html>

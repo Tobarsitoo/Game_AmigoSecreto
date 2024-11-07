@@ -62,6 +62,7 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Nombre</th>
+                                        <th>Apellido </th>
                                         <th>Género</th>
                                         <th>Cédula</th>
                                         <th>Rol</th>
@@ -94,6 +95,7 @@
                                     <div class="form-group">
                                         <label for="genero">Género</label>
                                         <select class="form-control" id="genero" name="genero" required>
+                                            <option value="" selected>Selecciones un genero</option>
                                             <option value="M">Masculino</option>
                                             <option value="F">Femenino</option>
                                         </select>
@@ -109,6 +111,7 @@
                                     <div class="form-group">
                                         <label for="rol">Rol</label>
                                         <select class="form-control" id="rol" name="rol" required>
+                                            <option value="" selected>Selecciones un rol</option>
                                             <option value="admin">Administrador</option>
                                             <option value="usuario">Usuario</option>
                                         </select>
@@ -171,6 +174,7 @@
                         columns: [
                             { data: 'id_usuario' },
                             { data: 'nombre' },
+                            { data: 'primer_apellido'},
                             { data: 'genero' },
                             { data: 'cedula' },
                             { data: 'rol' },
