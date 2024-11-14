@@ -71,7 +71,7 @@ exports.getAmigoPreferences = (req, res) => {
                 res.json({
                     success: true,
                     amigo: {
-                        nombre: amigo.nombre,
+                        nombre: amigo.nombres,
                         primer_apellido: amigo.primer_apellido,
                         segundo_apellido: amigo.segundo_apellido,
                         genero: amigo.genero,

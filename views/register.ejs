@@ -75,12 +75,20 @@
                                 <input type="text" class="form-control" id="nombreAsociado" readonly>
                             </div>
                             <div class="form-group">
+                                <label for="cuentaAsociado">Cuenta</label>
+                                <input type="text" class="form-control" id="cuentaAsociado" readonly>
+                            </div>
+                            <div class="form-group">
                                 <label for="nominaAsociado">Nómina</label>
                                 <input type="text" class="form-control" id="nominaAsociado" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="agenciaAsociado">Agencia</label>
                                 <input type="text" class="form-control" id="agenciaAsociado" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="correoAsociado">Correo</label>
+                                <input type="text" class="form-control" id="correoAsociado" readonly>
                             </div>
                             <div class="form-group">
                                 <label for="generoAsociado">Género</label>
@@ -132,12 +140,18 @@
                     const apiRetiro = data.asociado.RETIRO;
                     const apiNombre = data.asociado.NOMBRES;
                     const apiNomina = data.asociado.NOMNOMINA;
-                    const apiAgencia = data.asociado.AGENCIA
+                    const apiAgencia = data.asociado.AGENCIA;
+                    const apiCorreo = data.asociado.CORREO;
+                    const apiFechaNa = data.asociado.FECHANA;
+                    const apiCuenta = data.asociado.CUENTA;
+                    const apiCedula = data.asociado.CEDULA;
 
                     if (apiRetiro === '0') {
                         document.getElementById('nombreAsociado').value = apiNombre;
                         document.getElementById('nominaAsociado').value = apiNomina;
                         document.getElementById('agenciaAsociado').value = apiAgencia;
+                        document.getElementById('cuentaAsociado').value = apiCuenta;
+                        document.getElementById('correoAsociado').value = apiCorreo;
 
                         Swal.fire({
                             icon: 'success',
@@ -153,18 +167,55 @@
                     }
                 });
         });
-        document.getElementById('guardarAsociadoBtn').addEventListener('submit', function () {
-            Swal.fire({
-                icon: 'success',
-                title: 'Guardado',
-                text: 'Tú información ha sido guardada correctamente. Ya puedes jugar Amigo Secreto',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor: '#067063'
-            }).then(() => {
-                $('#asociadoModal').modal('hide');
-            });
+
+        document.getElementById('asociadoForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const data = {
+                apiCedula: document.getElementById('cedula').value,
+                apiNombre: document.getElementById('nombreAsociado').value,
+                apiAgencia: document.getElementById('agenciaAsociado').value,
+                apiFechaNa: document.getElementById('fechaNacimiento').value,
+                generoAsociado: document.getElementById('generoAsociado').value,
+                apiCuenta: document.getElementById('cuentaAsociado').value,
+                apiCorreo: document.getElementById('correoAsociado').value
+            };
+
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.message) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Guardado',
+                            text: result.message,
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '#067063'
+                        }).then(() => {
+                            $('#asociadoModal').modal('hide');
+                            window.location.href = '/';
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'No se pudo registrar el usuario. Intenta de nuevo.',
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#D9534F'
+                    });
+                });
         });
     </script>
 </body>
+hola mundo
 
 </html>

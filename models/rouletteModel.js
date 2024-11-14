@@ -4,7 +4,7 @@ const UserModel = {
     getRandomUser: (excludeUserId, userGender, callback) => {
         const oppositeGender = userGender === 'M' ? 'F' : 'M';
         const query = `
-            SELECT u.id_usuario, u.nombre, u.genero, a.nombre AS area
+            SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
             WHERE u.id_usuario != ? AND u.genero = ?
@@ -21,7 +21,7 @@ const UserModel = {
 const AmigoSecretoModel = {
     getAmigo: (userId, callback) => {
         const query = `
-            SELECT u.id_usuario, u.nombre, u.primer_apellido, u.segundo_apellido, u.genero, a.nombre AS area
+            SELECT u.id_usuario, u.nombres, u.primer_apellido, u.segundo_apellido, u.genero, a.nombre AS area
             FROM amigos_secreto am
             JOIN usuarios u ON am.id_amigo_secreto = u.id_usuario
             JOIN agencias a ON u.area = a.cu

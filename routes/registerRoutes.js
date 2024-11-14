@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const path = require('path');
+const registerController = require('../controllers/registerController');
 
 router.get('/register', (req, res) => {
     res.render('register', { apiUrl: process.env.API_AS400 });
 });
+
+router.post('/register', registerController.registerUser);
 
 module.exports = router;

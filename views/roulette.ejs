@@ -221,7 +221,7 @@
                                             if (response.success) {
                                                 const amigo = response.amigo;
                                                 if (amigo) {
-                                                    $('#userName').text(`${amigo.nombre} ${amigo.primer_apellido} ${amigo.segundo_apellido}`);
+                                                    $('#userName').text(`${amigo.nombre}`);
                                                     $('#userInfo').html(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'} - Área: ${amigo.area}`);
 
                                                     let regalos = amigo.regalos || [];

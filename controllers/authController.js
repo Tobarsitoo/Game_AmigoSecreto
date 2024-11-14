@@ -23,7 +23,7 @@ exports.login = (req, res) => {
 
                     if (isMatch) {
                         req.session.loggedin = true;
-                        req.session.nombre = user.nombre;
+                        req.session.nombre = user.nombres;
                         req.session.cedula = user.cedula;
                         req.session.primer_apellido = user.primer_apellido;
                         req.session.segundo_apellido = user.segundo_apellido;
