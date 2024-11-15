@@ -20,7 +20,7 @@ router.get('/logout', (req, res) => {
             req.session.id_usuario,
             ip,
             'Cierre de sesión',
-            `Cierre correcto del usuario ${req.session.nombre} ${req.session.primer_apellido} ${req.session.segundo_apellido}`
+            `Cierre correcto del usuario ${req.session.nombre}`
         );
     }
     req.session.destroy((err) => {

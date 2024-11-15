@@ -29,22 +29,22 @@ exports.login = (req, res) => {
                         req.session.genero = user.genero;
                         req.session.id_usuario = user.id_usuario;
 
-                        let redirectUrl = '/home';
-                        if (user.rol === 'administrador') {
+                        let redirectUrl = '/';
+                        if (user.rol.trim() === 'administrador') {
                             redirectUrl = '/admin-dashboard';
-                        } else if (user.rol === 'usuario') {
+                        } else if (user.rol.trim() === 'usuario') {
                             redirectUrl = '/usuario-dashboard';
                         }
 
-                        AuditModel.registrarAuditoria(user.id_usuario, ip, 'Inicio de sesión exitoso', `Acceso correcto del usuario ${user.nombres}`);
+                        AuditModel.registrarAuditoria(user.id_usuario, ip, 'Inicio de sesión exitoso', `Acceso correcto del usuario ${user.nombre}`);
                         res.json({ success: true, message: 'Inicio de sesión exitoso', redirect: redirectUrl });
                     } else {
-                        AuditModel.registrarAuditoria(ip, 'Contraseña incorrecta', `Intento de login fallido del usuario ${user.nombres}`);
+                        AuditModel.registrarAuditoria(user.id_usuario, ip, 'Contraseña incorrecta', 'Intento de login fallido');
                         res.json({ success: false, message: 'Contraseña incorrecta' });
                     }
                 });
             } else {
-                AuditModel.registrarAuditoria(ip, 'Usuario no encontrado', 'Intento de login fallido', usuario);
+                AuditModel.registrarAuditoria(null, ip, 'Usuario no encontrado', 'Intento de login fallido', usuario);
                 res.json({ success: false, message: 'Usuario no encontrado' });
             }
         });
@@ -54,7 +54,7 @@ exports.login = (req, res) => {
 };
 
 exports.admindashboard = (req, res) => {
-    if (req.session.loggedin && req.session.rol === 'administrador') {
+    if (req.session.loggedin && req.session.rol.trim() === 'administrador') {
         res.render('admin', {
             nombre: req.session.nombre,
             id_usuario: req.session.id_usuario
@@ -65,7 +65,7 @@ exports.admindashboard = (req, res) => {
 };
 
 exports.userdashboard = (req, res) => {
-    if (req.session.loggedin && req.session.rol === 'usuario') {
+    if (req.session.loggedin && req.session.rol.trim() === 'usuario') {
         res.render('user', {
             nombre: req.session.nombre,
             id_usuario: req.session.id_usuario
