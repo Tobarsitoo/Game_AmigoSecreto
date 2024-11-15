@@ -33,7 +33,7 @@ exports.assignAmigoSecreto = (req, res) => {
                     return res.status(500).json({ success: false, message: 'Error al guardar amigo secreto' });
                 }
 
-                const detalles = `Se asignó a ${amigo.nombre} con ID: ${amigo.id_usuario} como amigo secreto.`;
+                const detalles = `Se asignó a ${amigo.nombres} con ID: ${amigo.id_usuario} como amigo secreto.`;
                 AuditModel.registrarAuditoria(userId, ip, 'Asignación de amigo secreto', detalles);
 
                 res.json({ success: true, amigo });

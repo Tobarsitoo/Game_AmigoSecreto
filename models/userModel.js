@@ -35,6 +35,23 @@ const UserModel = {
             if (err) return callback(err);
             callback(null, results);
         });
+    },
+
+    addUser: (userData, callback) => {
+        const { cedula, nombres, area, contraseña, estado, emparejado, fecha_nacimiento, genero, email, rol } = userData;
+        bcrypt.hash(contraseña, 10, (err, hashedPassword) => {
+            if (err) return callback(err);
+
+            const query = `
+                INSERT INTO usuarios (cedula, nombres, area, contraseña, estado, emparejado, fecha_nacimiento, genero, email, fecha_registro, rol)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), ?)
+            `;
+            const values = [cedula, nombres, area, hashedPassword, estado, emparejado, fecha_nacimiento, genero, email, rol];
+            connection.query(query, values, (error, results) => {
+                if (error) return callback(error);
+                callback(null, results);
+            });
+        });
     }
 };
 

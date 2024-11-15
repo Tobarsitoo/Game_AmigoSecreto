@@ -137,14 +137,24 @@
             fetch(apiUrl)
                 .then(response => response.json())
                 .then(data => {
+                    // Verificar si el usuario no está en la base de datos del AS400
+                    if (!data || !data.asociado) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'No estás en la base de datos del AS400',
+                            text: 'Por favor verifica tus datos o contacta al departamento de sistemas.',
+                            confirmButtonText: 'Aceptar',
+                            confirmButtonColor: '#D9534F'
+                        });
+                        return;
+                    }
+
                     const apiRetiro = data.asociado.RETIRO;
                     const apiNombre = data.asociado.NOMBRES;
                     const apiNomina = data.asociado.NOMNOMINA;
                     const apiAgencia = data.asociado.AGENCIA;
                     const apiCorreo = data.asociado.CORREO;
-                    const apiFechaNa = data.asociado.FECHANA;
                     const apiCuenta = data.asociado.CUENTA;
-                    const apiCedula = data.asociado.CEDULA;
 
                     if (apiRetiro === '0') {
                         document.getElementById('nombreAsociado').value = apiNombre;
@@ -165,7 +175,7 @@
                             }
                         });
                     }
-                });
+                })
         });
 
         document.getElementById('asociadoForm').addEventListener('submit', function (event) {
@@ -216,6 +226,5 @@
         });
     </script>
 </body>
-hola mundo
 
 </html>
