@@ -1,15 +1,15 @@
 const db = require('../config/db');
 
 const AuditModel = {
-    registrarAuditoria: (id_usuario, ip, accion, detalles, usuario = null) => {
+    registrarAuditoria: (ip, accion, detalles, usuario) => {
         const fecha = new Date();
 
         const query = `
-            INSERT INTO auditoria (id_usuario, ip, accion, fecha, detalles)
-            VALUES (?, ?, ?, ?, ?)
+            INSERT INTO auditoria (ip, accion, fecha, detalles)
+            VALUES (?, ?, ?, ?)
         `;
 
-        db.query(query, [id_usuario, ip, accion, fecha, detalles], (err, results) => {
+        db.query(query, [ip, accion, fecha, detalles], (err, results) => {
             if (err) {
                 console.error('Error al registrar auditoría:', err);
             }

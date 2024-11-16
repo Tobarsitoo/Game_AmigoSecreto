@@ -72,8 +72,6 @@ exports.getAmigoPreferences = (req, res) => {
                     success: true,
                     amigo: {
                         nombre: amigo.nombres,
-                        primer_apellido: amigo.primer_apellido,
-                        segundo_apellido: amigo.segundo_apellido,
                         genero: amigo.genero,
                         area: amigo.area,
                         regalos: regalos.map(r => r.regalo),

@@ -9,7 +9,7 @@ const registerController = {
                 area: req.body.apiAgencia,
                 ip_registro: req.ip,
                 fecha_nacimiento: req.body.apiFechaNa,
-                genero: req.body.generoAsociado,
+                genero: req.body.apiGenero,
                 cuenta: req.body.apiCuenta,
                 email: req.body.apiCorreo
             };

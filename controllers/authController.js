@@ -36,7 +36,7 @@ exports.login = (req, res) => {
                             redirectUrl = '/usuario-dashboard';
                         }
 
-                        AuditModel.registrarAuditoria(user.id_usuario, ip, 'Inicio de sesión exitoso', `Acceso correcto del usuario ${user.nombre}`);
+                        AuditModel.registrarAuditoria(user.id_usuario, ip, 'Inicio de sesión exitoso', `Acceso correcto del usuario ${user.nombres}`);
                         res.json({ success: true, message: 'Inicio de sesión exitoso', redirect: redirectUrl });
                     } else {
                         AuditModel.registrarAuditoria(user.id_usuario, ip, 'Contraseña incorrecta', 'Intento de login fallido');
@@ -44,7 +44,7 @@ exports.login = (req, res) => {
                     }
                 });
             } else {
-                AuditModel.registrarAuditoria(null, ip, 'Usuario no encontrado', 'Intento de login fallido', usuario);
+                AuditModel.registrarAuditoria(ip, 'Usuario no encontrado', `Intento de login fallido del usuario ${usuario}`);
                 res.json({ success: false, message: 'Usuario no encontrado' });
             }
         });

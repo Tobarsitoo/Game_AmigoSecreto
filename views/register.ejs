@@ -19,7 +19,7 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 text-center mb-2">
                     <h2 class="heading-section">🎁 Inscripción Amigo Secreto 🎁</h2>
-                    <p class="text-muted">Este formulario de inscripción <strong>SOLO</strong> es valido para
+                    <p class="text-muted">Este formulario de inscripción <strong>SOLO</strong> es válido para
                         <strong>NOMBRADOS</strong>
                     </p>
                 </div>
@@ -31,198 +31,143 @@
                             <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
                                 alt="Logo" class="logo" style="width: 70%; height: auto;">
                         </div>
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="fa fa-user-o"></span>
-                        </div>
                         <h3 class="text-center mb-4">Ingresa tus datos</h3>
-                        <form id="cedulaForm" class="login-form">
+                        <form id="cedulaForm">
                             <div class="form-group">
                                 <label for="cedula">Cédula</label>
-                                <input type="number" class="form-control rounded-left" id="cedula"
-                                    placeholder="Ingreses su cédula" required>
+                                <input type="number" class="form-control" id="cedula" placeholder="Ingrese su cédula">
                             </div>
                             <div class="form-group">
                                 <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control rounded-left" id="fechaNacimiento" required>
+                                <input type="date" class="form-control" id="fechaNacimiento">
                             </div>
                             <div class="form-group">
                                 <label for="fechaExpedicion">Fecha de Expedición</label>
-                                <input type="date" class="form-control rounded-left" id="fechaExpedicion" required>
+                                <input type="date" class="form-control" id="fechaExpedicion">
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Verificar</button>
+                                <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Validar</button>
                             </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal -->
-        <div id="asociadoModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="asociadoModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="asociadoModalLabel">Información del Asociado</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="asociadoForm">
-                            <div class="form-group">
-                                <label for="nombreAsociado">Nombre</label>
-                                <input type="text" class="form-control" id="nombreAsociado" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="cuentaAsociado">Cuenta</label>
-                                <input type="text" class="form-control" id="cuentaAsociado" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="nominaAsociado">Nómina</label>
-                                <input type="text" class="form-control" id="nominaAsociado" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="agenciaAsociado">Agencia</label>
-                                <input type="text" class="form-control" id="agenciaAsociado" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="correoAsociado">Correo</label>
-                                <input type="text" class="form-control" id="correoAsociado" readonly>
-                            </div>
-                            <div class="form-group">
-                                <label for="generoAsociado">Género</label>
-                                <select class="form-control" id="generoAsociado" required>
-                                    <option value="" disabled selected>Seleccione una opción</option>
-                                    <option value="M">Masculino</option>
-                                    <option value="F">Femenino</option>
-                                </select>
-                            </div>
-                            <button type="submit" class="btn btn-primary" id="guardarAsociadoBtn">Guardar</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     <script>
-        document.getElementById('cedulaForm').addEventListener('submit', function (event) {
-            event.preventDefault(); // Evitar el envío del formulario
+        $(document).ready(function () {
+            // Manejo del formulario (Campos incompletos)
+            $('#cedulaForm').on('submit', function (e) {
+                e.preventDefault();
+                const cedula = $('#cedula').val();
+                const fechaNacimiento = $('#fechaNacimiento').val();
+                const fechaExpedicion = $('#fechaExpedicion').val();
 
-            const cedula = document.getElementById('cedula').value;
-            const fechaNacimiento = document.getElementById('fechaNacimiento').value;
-            const fechaExpedicion = document.getElementById('fechaExpedicion').value;
+                if (!cedula || !fechaNacimiento || !fechaExpedicion) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Campos Incompletos',
+                        text: 'Por favor completa todos los campos.',
+                        confirmButtonColor: '#D9534F',
+                        confirmButtonText: 'Aceptar'
+                    });
+                    return;
+                }
 
-            // Convertir las fechas a formato AAAAMMDD
-            const fechaNacimientoFormat = fechaNacimiento.replace(/-/g, '');
-            const fechaExpedicionFormat = fechaExpedicion.replace(/-/g, '');
+                // URL de la API renderizada desde la ruta
+                const apiUrl = `<%= apiUrl %>/nombre/${cedula}`;
 
-            // Validar que las fechas estén en formato AAAAMMDD
-            const fechaRegex = /^\d{8}$/;
-            if (!fechaRegex.test(fechaNacimientoFormat) || !fechaRegex.test(fechaExpedicionFormat)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Formato de Fecha Incorrecto',
-                    text: 'Por favor, ingresa las fechas en el formato correcto (AAAAMMDD).',
-                    confirmButtonText: 'Aceptar',
-                    confirmButtonColor: '#D9534F'
-                });
-                return;
-            }
-
-            // URL de la API renderizada desde la ruta
-            const apiUrl = `<%= apiUrl %>/nombre/${cedula}`;
-
-            fetch(apiUrl)
-                .then(response => response.json())
-                .then(data => {
-                    // Verificar si el usuario no está en la base de datos del AS400
-                    if (!data || !data.asociado) {
+                // Validación con la API (Obtener datos)
+                fetch(apiUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'No se encontró información asociada a esta cédula.',
+                                confirmButtonColor: '#D9534F',
+                                confirmButtonText: 'Aceptar'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Datos Validados',
+                                text: 'Cédula validada correctamente. Procediendo a la inscripción...',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                enviarDatosInscripcion(data);
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         Swal.fire({
-                            icon: 'warning',
-                            title: 'No estás en la base de datos del AS400',
-                            text: 'Por favor verifica tus datos o contacta al departamento de sistemas.',
-                            confirmButtonText: 'Aceptar',
-                            confirmButtonColor: '#D9534F'
+                            icon: 'error',
+                            title: 'Error en el Servidor',
+                            text: 'Hubo un problema al validar la cédula.',
+                            confirmButtonColor: '#D9534F',
+                            confirmButtonText: 'Intentar de nuevo'
                         });
-                        return;
-                    }
+                    });
+            });
 
-                    const apiRetiro = data.asociado.RETIRO;
-                    const apiNombre = data.asociado.NOMBRES;
-                    const apiNomina = data.asociado.NOMNOMINA;
-                    const apiAgencia = data.asociado.AGENCIA;
-                    const apiCorreo = data.asociado.CORREO;
-                    const apiCuenta = data.asociado.CUENTA;
+            // Guardado de datos (Base de datos: coopserp_asecreto)
+            function enviarDatosInscripcion(datos) {
+                const data = {
+                    apiCedula: datos.asociado.CEDULA,
+                    apiFechaNa: $('#fechaNacimiento').val(),
+                    apiNombre: datos.asociado.NOMBRES,
+                    apiAgencia: datos.asociado.AGENCIA,
+                    apiCuenta: datos.asociado.CUENTA,
+                    apiCorreo: datos.asociado.CORREO,
+                    apiGenero: datos.asociado.GENERO
+                };
 
-                    if (apiRetiro === '0') {
-                        document.getElementById('nombreAsociado').value = apiNombre;
-                        document.getElementById('nominaAsociado').value = apiNomina;
-                        document.getElementById('agenciaAsociado').value = apiAgencia;
-                        document.getElementById('cuentaAsociado').value = apiCuenta;
-                        document.getElementById('correoAsociado').value = apiCorreo;
+                const RETIRO = datos.asociado.RETIRO
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: `¡Hola, ${apiNombre}!`,
-                            text: 'Ya estás verificado. Continua llenando la siguiente información.',
-                            confirmButtonText: 'Continuar',
-                            confirmButtonColor: '#067063'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                $('#asociadoModal').modal('show');
+                // Validación de 'RETIRO' o estado 'ACTIVO' de cuenta
+                if (RETIRO === '0') {
+                    fetch('/register', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    })
+                        .then(response => response.json())
+                        .then(result => {
+                            if (result.message) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Inscripción Exitosa!',
+                                    text: result.message,
+                                    confirmButtonColor: '#067063',
+                                    confirmButtonText: 'Aceptar'
+                                });
                             }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error al Guardar',
+                                text: 'No se pudo completar la inscripción.',
+                                confirmButtonColor: '#D9534F',
+                                confirmButtonText: 'Intentar de nuevo'
+                            });
                         });
-                    }
-                })
-        });
-
-        document.getElementById('asociadoForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            const data = {
-                apiCedula: document.getElementById('cedula').value,
-                apiNombre: document.getElementById('nombreAsociado').value,
-                apiAgencia: document.getElementById('agenciaAsociado').value,
-                apiFechaNa: document.getElementById('fechaNacimiento').value,
-                generoAsociado: document.getElementById('generoAsociado').value,
-                apiCuenta: document.getElementById('cuentaAsociado').value,
-                apiCorreo: document.getElementById('correoAsociado').value
-            };
-
-            fetch('/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.message) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Guardado',
-                            text: result.message,
-                            confirmButtonText: 'Aceptar',
-                            confirmButtonColor: '#067063'
-                        }).then(() => {
-                            $('#asociadoModal').modal('hide');
-                            window.location.href = '/';
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
+                } else {
                     Swal.fire({
                         icon: 'error',
-                        title: 'Error',
-                        text: 'No se pudo registrar el usuario. Intenta de nuevo.',
-                        confirmButtonText: 'Aceptar',
-                        confirmButtonColor: '#D9534F'
+                        title: 'Error al inscribirse',
+                        text: 'Usted no se encuentra activo.',
+                        confirmButtonColor: '#D9534F',
+                        confirmButtonText: 'Intentar de nuevo'
                     });
-                });
+                }
+            }
         });
     </script>
 </body>

@@ -34,7 +34,7 @@ const adminController = {
             }
             res.status(201).json({ message: 'Usuario agregado correctamente', userId: result.insertId });
         });
-    },
+    }
 };
 
 module.exports = adminController;
