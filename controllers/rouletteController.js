@@ -7,36 +7,32 @@ exports.assignAmigoSecreto = (req, res) => {
     const userGender = req.session.genero;
     const ip = (req.headers['x-forwarded-for'] || req.connection.remoteAddress) === '::1' ? '127.0.0.1' : req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
-    AmigoSecretoModel.getAmigo(userId, (err, existingAmigo) => {
+    AmigoSecretoModel.getAmigo(userId, (err, existingAmigo, results) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ success: false, message: 'Error al verificar el amigo secreto' });
+            return res.status(500).json({ success: false, message: err.message || 'Error al verificar el amigo secreto' });
         }
 
         if (existingAmigo) {
-            return res.json({ success: false, message: 'Ya tienes un amigo asignado' });
+            return res.status(202).json({ success: false, message: 'Ya tienes un amigo secreto asignado. No puedes volver a girar la ruleta.' });
         }
 
         UserModel.getRandomUser(userId, userGender, (err, amigo) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ success: false, message: 'Error al asignar amigo secreto' });
+            if (err || !amigo) {
+                console.error(err || 'No se encontró un amigo.');
+                return res.json({ success: false, status: 404, message: 'No hay amigos disponibles para asignar.' });
             }
 
-            if (!amigo) {
-                return res.status(404).json({ success: false, message: 'No se encontró un amigo secreto compatible' });
-            }
-
-            AmigoSecretoModel.saveAmigoSecreto(userId, amigo.id_usuario, (err, result) => {
+            AmigoSecretoModel.saveAmigoSecreto(userId, amigo.id_usuario, (err) => {
                 if (err) {
                     console.error(err);
-                    return res.status(500).json({ success: false, message: 'Error al guardar amigo secreto' });
+                    return res.status(500).json({ success: false, message: err.message || 'Error al guardar amigo secreto' });
                 }
 
                 const detalles = `Se asignó a ${amigo.nombres} con ID: ${amigo.id_usuario} como amigo secreto.`;
                 AuditModel.registrarAuditoria(userId, ip, 'Asignación de amigo secreto', detalles);
 
-                res.json({ success: true, amigo });
+                return res.json({ success: true, amigo });
             });
         });
     });
@@ -68,7 +64,7 @@ exports.getAmigoPreferences = (req, res) => {
                     return res.status(500).json({ success: false, message: 'Error al obtener los dulces del amigo secreto' });
                 }
 
-                res.json({
+                return res.json({
                     success: true,
                     amigo: {
                         nombre: amigo.nombres,

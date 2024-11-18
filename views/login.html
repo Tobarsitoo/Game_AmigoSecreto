@@ -32,16 +32,20 @@
                                         <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Iniciar Sesión</h5>
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="usuario">Cédula</label>
-                                            <input type="text" id="usuario" class="form-control form-control-lg" name="usuario" placeholder="Ingrese su cédula, por favor" required />
+                                            <input type="text" id="usuario" class="form-control form-control-lg"
+                                                name="usuario" placeholder="Ingrese su cédula, por favor" required />
                                             <div class="invalid-feedback">Por favor, ingrese su usuario.</div>
                                         </div>
                                         <div class="form-outline mb-4">
                                             <label class="form-label" for="contraseña">Contraseña</label>
-                                            <input type="password" id="contraseña" class="form-control form-control-lg" name="contraseña" placeholder="Ingrese su contraseña, por favor" required />
+                                            <input type="password" id="contraseña" class="form-control form-control-lg"
+                                                name="contraseña" placeholder="Ingrese su contraseña, por favor"
+                                                required />
                                             <div class="invalid-feedback">Por favor, ingrese su contraseña.</div>
                                         </div>
                                         <div class="pt-1 mb-4">
-                                            <button class="btn btn-lg btn-block" style="background-color: #D1E9F6;" type="submit">Iniciar Sesión</button>
+                                            <button class="btn btn-lg btn-block" style="background-color: #D1E9F6;"
+                                                type="submit">Iniciar Sesión</button>
                                         </div>
                                         <div id="errorMessages" class="text-danger"></div>
                                     </form>
@@ -54,6 +58,18 @@
         </div>
     </section>
     <script>
+
+        // Mostrar alerta informativa al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            Swal.fire({
+                icon: 'info',
+                title: 'Información Importante',
+                text: 'Tu usuario es tu cédula y tu contraseña es igual. Además recuerda que aún no podras jugar amigo secreto hasta que sea habilitado, mientras podras agregar tus preferencias para que cuando seas asignado como amigo puedan obtener tu infromación para un juego satisfactorio',
+                confirmButtonColor: '#4A90E2',
+                confirmButtonText: 'Entendido'
+            });
+        });
+
         (function () {
             'use strict';
             window.addEventListener('load', function () {

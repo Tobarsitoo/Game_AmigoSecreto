@@ -3,17 +3,45 @@ const connection = require('../config/db');
 const UserModel = {
     getRandomUser: (excludeUserId, userGender, callback) => {
         const oppositeGender = userGender === 'M' ? 'F' : 'M';
-        const query = `
+
+        const queryAvailableUsers = `
             SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
-            WHERE u.id_usuario != ? AND u.genero = ?
+            WHERE u.id_usuario != ? AND u.emparejado = 0
             ORDER BY RAND()
             LIMIT 1;
         `;
-        connection.query(query, [excludeUserId, oppositeGender], (err, results) => {
-            if (err) return callback(err);
-            callback(null, results[0]);
+
+        const queryOppositeGender = `
+            SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
+            FROM usuarios u
+            JOIN agencias a ON u.area = a.cu
+            WHERE u.id_usuario != ? AND u.genero = ? AND u.emparejado = 0
+            ORDER BY RAND()
+            LIMIT 1;
+        `;
+
+        connection.query(queryOppositeGender, [excludeUserId, oppositeGender], (err, results) => {
+            if (err) {
+                return callback({ success: false, message: 'Error en la base de datos' });
+            }
+            if (results.length > 0) {
+                return callback(null, results[0]); // Usuario encontrado.
+            }
+
+            // Si no hay del género opuesto, busca en general.
+            connection.query(queryAvailableUsers, [excludeUserId], (err, results) => {
+                if (err) {
+                    return callback({ success: false, message: 'Error en la base de datos' });
+                }
+                if (results.length > 0) {
+                    return callback(null, results[0]); // Usuario encontrado.
+                }
+
+                // Si no hay usuarios disponibles.
+                return callback({ success: false, message: 'No hay más amigos para asignar.' });
+            });
         });
     }
 };
@@ -21,7 +49,7 @@ const UserModel = {
 const AmigoSecretoModel = {
     getAmigo: (userId, callback) => {
         const query = `
-            SELECT u.id_usuario, u.nombres, u.primer_apellido, u.segundo_apellido, u.genero, a.nombre AS area
+            SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
             FROM amigos_secreto am
             JOIN usuarios u ON am.id_amigo_secreto = u.id_usuario
             JOIN agencias a ON u.area = a.cu

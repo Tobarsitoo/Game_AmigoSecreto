@@ -125,9 +125,8 @@
                     apiGenero: datos.asociado.GENERO
                 };
 
-                const RETIRO = datos.asociado.RETIRO
+                const RETIRO = datos.asociado.RETIRO;
 
-                // Validación de 'RETIRO' o estado 'ACTIVO' de cuenta
                 if (RETIRO === '0') {
                     fetch('/register', {
                         method: 'POST',
@@ -138,13 +137,23 @@
                     })
                         .then(response => response.json())
                         .then(result => {
-                            if (result.message) {
+                            if (result.error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error de Registro',
+                                    text: result.error,
+                                    confirmButtonColor: '#D9534F',
+                                    confirmButtonText: 'Aceptar'
+                                });
+                            } else {
                                 Swal.fire({
                                     icon: 'success',
                                     title: '¡Inscripción Exitosa!',
                                     text: result.message,
                                     confirmButtonColor: '#067063',
                                     confirmButtonText: 'Aceptar'
+                                }).then(() => {
+                                    window.location.href = '/';
                                 });
                             }
                         })

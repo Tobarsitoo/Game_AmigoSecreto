@@ -14,6 +14,12 @@ const registerController = {
                 email: req.body.apiCorreo
             };
 
+            // Verifica si la cédula ya existe
+            const exists = await registerModel.checkCedulaExists(data.cedula);
+            if (exists) {
+                return res.status(400).json({ error: 'La cédula ya está registrada' });
+            }
+
             const result = await registerModel.insertUser(data);
 
             res.status(201).json({ message: 'Usuario registrado exitosamente', data: result });

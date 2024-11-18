@@ -44,7 +44,7 @@ exports.login = (req, res) => {
                     }
                 });
             } else {
-                AuditModel.registrarAuditoria(ip, 'Usuario no encontrado', `Intento de login fallido del usuario ${usuario}`);
+                AuditModel.registrarAuditoria(ip, 'Usuario no encontrado', `Intento de login fallido por no encontrar usuario`);
                 res.json({ success: false, message: 'Usuario no encontrado' });
             }
         });

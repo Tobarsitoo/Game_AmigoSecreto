@@ -195,84 +195,94 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
             <script>
                 $(document).ready(function () {
-                    $('#spinButton').click(function () {
-                        $.post('/roulette/assign', function (response) {
-                            if (!response.success && response.message === 'Ya tienes un amigo asignado') {
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'Amigo Asignado',
-                                    text: 'Ya tienes un amigo secreto asignado. No puedes volver a girar la ruleta.',
-                                    confirmButtonColor: '#4A90E2',
-                                });
-                                return;
-                            }
+                    document.querySelector('#spinButton').addEventListener('click', () => {
+                        fetch('/roulette/assign', { method: 'POST' })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                    // Activar la animación de la ruleta
+                                    const wheelStrip = $('#wheelStrip');
+                                    wheelStrip.removeClass('scrolling');
+                                    void wheelStrip.offsetWidth;
+                                    wheelStrip.addClass('scrolling');
 
-                            const wheelStrip = $('#wheelStrip');
-                            wheelStrip.removeClass('scrolling');
-                            void wheelStrip.offsetWidth;
-                            wheelStrip.addClass('scrolling');
+                                    // Simular el tiempo de giro y luego mostrar el modal con información
+                                    setTimeout(function () {
+                                        $.ajax({
+                                            url: '/roulette/amigo-preferencias',
+                                            method: 'GET',
+                                            success: function (response) {
+                                                if (response.success) {
+                                                    const amigo = response.amigo;
+                                                    if (amigo) {
+                                                        $('#userName').text(`${amigo.nombre}`);
+                                                        $('#userInfo').html(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'} - Área: ${amigo.area}`);
 
-                            setTimeout(function () {
-                                if (response.success) {
-                                    $.ajax({
-                                        url: '/roulette/amigo-preferencias',
-                                        method: 'GET',
-                                        success: function (response) {
-                                            if (response.success) {
-                                                const amigo = response.amigo;
-                                                if (amigo) {
-                                                    $('#userName').text(`${amigo.nombre}`);
-                                                    $('#userInfo').html(`Género: ${amigo.genero === 'F' ? 'Femenino' : 'Masculino'} - Área: ${amigo.area}`);
+                                                        let regalos = amigo.regalos || [];
+                                                        let dulces = amigo.dulces || [];
 
-                                                    let regalos = amigo.regalos || [];
-                                                    let dulces = amigo.dulces || [];
+                                                        if (typeof regalos === 'string') {
+                                                            regalos = regalos.split(',');
+                                                        }
 
-                                                    if (typeof regalos === 'string') {
-                                                        regalos = regalos.split(',');
-                                                    }
+                                                        if (typeof dulces === 'string') {
+                                                            dulces = dulces.split(',');
+                                                        }
 
-                                                    if (typeof dulces === 'string') {
-                                                        dulces = dulces.split(',');
-                                                    }
+                                                        $('#regalosList').empty();
+                                                        $('#dulcesList').empty();
 
-                                                    $('#regalosList').empty();
-                                                    $('#dulcesList').empty();
+                                                        if (regalos.length) {
+                                                            regalos.forEach(function (regalo) {
+                                                                $('#regalosList').append(`<li class="list-group-item">${regalo}</li>`);
+                                                            });
+                                                            $('#noRegalos').hide();
+                                                        } else {
+                                                            $('#noRegalos').show();
+                                                        }
 
-                                                    if (regalos.length) {
-                                                        regalos.forEach(function (regalo) {
-                                                            $('#regalosList').append(`<li class="list-group-item">${regalo}</li>`);
-                                                        });
-                                                        $('#noRegalos').hide();
+                                                        if (dulces.length) {
+                                                            dulces.forEach(function (dulce) {
+                                                                $('#dulcesList').append(`<li class="list-group-item">${dulce}</li>`);
+                                                            });
+                                                            $('#noDulces').hide();
+                                                        } else {
+                                                            $('#noDulces').show();
+                                                        }
+
+                                                        $('#resultModal').modal('show');
                                                     } else {
-                                                        $('#noRegalos').show();
+                                                        console.error('No se encontró información del amigo asignado.');
                                                     }
-
-                                                    if (dulces.length) {
-                                                        dulces.forEach(function (dulce) {
-                                                            $('#dulcesList').append(`<li class="list-group-item">${dulce}</li>`);
-                                                        });
-                                                        $('#noDulces').hide();
-                                                    } else {
-                                                        $('#noDulces').show();
-                                                    }
-
-                                                    $('#resultModal').modal('show');
                                                 } else {
-                                                    console.error('No se encontró información del amigo asignado.');
+                                                    console.error('Error al obtener las preferencias del amigo.');
                                                 }
-                                            } else {
-                                                console.error('Error al obtener las preferencias del amigo.');
+                                            },
+                                            error: function () {
+                                                console.error('Error en la solicitud para obtener las preferencias del amigo.');
                                             }
-                                        },
-                                        error: function () {
-                                            console.error('Error en la solicitud para obtener las preferencias del amigo.');
-                                        }
-                                    });
+                                        });
+                                    }, 5000);
                                 } else {
-                                    console.error('Error al asignar amigo secreto.');
+                                    // Mostrar alerta de inmediato si no hay asignación
+                                    Swal.fire({
+                                        title: data.status === 404 ? 'Sin asignar' : 'Error',
+                                        text: data.message,
+                                        icon: data.status === 404 ? 'info' : 'error',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#357ABD'
+                                    });
                                 }
-                            }, 5000);
-                        });
+                            })
+                            .catch((error) => {
+                                Swal.fire({
+                                    title: 'Error del servidor',
+                                    text: 'Ocurrió un error inesperado. Inténtalo de nuevo más tarde.',
+                                    icon: 'error',
+                                    confirmButtonText: 'Aceptar',
+                                });
+                                console.error('Error:', error);
+                            });
                     });
                 });
             </script>

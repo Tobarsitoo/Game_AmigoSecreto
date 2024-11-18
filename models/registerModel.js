@@ -2,6 +2,17 @@ const connection = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 const registerModel = {
+    async checkCedulaExists(cedula) {
+        const query = `SELECT COUNT(*) AS count FROM usuarios WHERE cedula = ?`;
+
+        return new Promise((resolve, reject) => {
+            connection.query(query, [cedula], (error, results) => {
+                if (error) return reject(error);
+                resolve(results[0].count > 0);
+            });
+        });
+    },
+
     async insertUser(data) {
         const hashedPassword = await bcrypt.hash(data.cedula, 10);
         const query = `
