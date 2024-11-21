@@ -246,8 +246,6 @@
                         const button = $(this);
                         const dulceId = button.data('id');
 
-                        console.log('ID del dulce a eliminar:', dulceId);
-
                         if (confirm('¿Está seguro de que desea eliminar este dulce?')) {
                             $.ajax({
                                 url: `/preferences/dulces/${dulceId}`,

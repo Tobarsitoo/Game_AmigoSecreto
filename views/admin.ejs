@@ -12,6 +12,81 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Estilos personalizados para la tabla */
+        table.dataTable {
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        table.dataTable th,
+        table.dataTable td {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background-color: #FF9100;
+            color: white;
+            border-radius: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+            background-color: #00712D;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #D1E9F6;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            border-radius: 20px;
+            padding: 5px 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-edit {
+            background-color: #FF9100;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background-color: #E67E22;
+        }
+
+        .btn-delete {
+            background-color: #E74C3C;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background-color: #C0392B;
+        }
+
+        /* Estilo del encabezado de la tabla */
+        .table thead th {
+            background-color: #00712D;
+            color: white;
+            font-weight: bold;
+            border: none;
+        }
+
+        /* Botón "Agregar Usuario" */
+        .btn-success {
+            background-color: #28A745;
+            border-radius: 30px;
+            padding: 12px 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 
 <body id="page-top">
@@ -50,16 +125,16 @@
         <!-- Usuarios -->
         <section id="usuarios" class="py-5" style="background-color: #FFFFFFFF;">
             <div class="container mt-5">
-                <div class="card mb-3">
-                    <div class="card-header text-center">
-                        <h2>Administración de Usuarios</h2>
+                <div class="card mb-3 shadow-lg">
+                    <div class="card-header text-center bg-success text-white">
+                        <h2 class="fw-bold">Tabla de Usuarios</h2>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body bg-light">
                         <!-- Tabla de Usuarios -->
                         <div class="table-responsive mt-4">
-                            <table id="usersTable" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr>
+                            <table id="usersTable" class="table table-hover table-bordered">
+                                <thead class="text-white">
+                                    <tr class="text-center">
                                         <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Género</th>
@@ -78,60 +153,91 @@
 
                 <!-- Formulario para agregar usuario -->
                 <div class="card">
-                    <div class="card-header text-center">
+                    <div class="card-header text-center text-white" style="background-color: #FF9100;">
                         <h4>Agregar Nuevo Usuario</h4>
                     </div>
                     <div class="card-body">
                         <form id="addUserForm">
-                            <div class="row">
-                                <div class="col-md-3">
+                            <div class="row g-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="nombre">Nombre</label>
-                                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                                        <label for="nombre" class="form-label">Nombre</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" class="form-control" id="nombre" name="nombre"
+                                                placeholder="Ingrese el nombre (APELLIDOS Nombres)" required>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="genero">Género</label>
-                                        <select class="form-control" id="genero" name="genero" required>
-                                            <option value="" selected>Selecciones un genero</option>
-                                            <option value="M">Masculino</option>
-                                            <option value="F">Femenino</option>
-                                        </select>
+                                        <label for="genero" class="form-label">Género</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-venus-mars"></i></span>
+                                            <select class="form-control" id="genero" name="genero" required>
+                                                <option value="" selected>Seleccione un género</option>
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Femenino</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="cedula">Cédula</label>
-                                        <input type="text" class="form-control" id="cedula" name="cedula" required>
+                                        <label for="cedula" class="form-label">Cédula</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                            <input type="text" class="form-control" id="cedula" name="cedula"
+                                                placeholder="Ingrese la cédula" required>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="rol">Rol</label>
-                                        <select class="form-control" id="rol" name="rol" required>
-                                            <option value="" selected>Selecciones un rol</option>
-                                            <option value="administrador">Administrador</option>
-                                            <option value="usuario">Usuario</option>
-                                        </select>
+                                        <label for="rol" class="form-label">Rol</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                                            <select class="form-control" id="rol" name="rol" required>
+                                                <option value="" selected>Seleccione un rol</option>
+                                                <option value="administrador">Administrador</option>
+                                                <option value="usuario">Usuario</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                                        <input type="date" class="form-control" id="fechaNacimiento"
-                                            name="fechaNacimiento" required>
+                                        <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                                            <input type="date" class="form-control" id="fechaNacimiento"
+                                                name="fechaNacimiento" required>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <label for="email" class="form-label">Email</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                                            <input type="email" class="form-control" id="email" name="email"
+                                                placeholder="Ingrese el email" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="area" class="form-label">Área</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
+                                            <input type="number" class="form-control" id="area" name="area"
+                                                placeholder="Ingrese el área" required>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-primary mt-3">Agregar Usuario</button>
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-success btn-lg">Agregar Usuario</button>
                             </div>
                         </form>
                     </div>
@@ -219,7 +325,7 @@
                         const formData = {
                             cedula: $('#cedula').val(),
                             nombres: $('#nombre').val(),
-                            area: 1, // Asume un valor predeterminado o actualiza según sea necesario
+                            area: $('#area').val(),
                             fecha_nacimiento: $('#fechaNacimiento').val(),
                             genero: $('#genero').val(),
                             email: $('#email').val(),

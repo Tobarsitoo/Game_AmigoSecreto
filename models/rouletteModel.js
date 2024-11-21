@@ -8,7 +8,13 @@ const UserModel = {
             SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
-            WHERE u.id_usuario != ? AND u.emparejado = 0
+            WHERE u.id_usuario != ? 
+                AND u.emparejado = 0 
+                AND u.id_usuario NOT IN (
+                    SELECT id_usuario
+                    FROM amigos_secreto
+                    WHERE id_amigo_secreto = ?
+                )
             ORDER BY RAND()
             LIMIT 1;
         `;
@@ -17,29 +23,37 @@ const UserModel = {
             SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
-            WHERE u.id_usuario != ? AND u.genero = ? AND u.emparejado = 0
+            WHERE u.id_usuario != ? 
+                AND u.genero = ? 
+                AND u.emparejado = 0 
+                AND u.id_usuario NOT IN (
+                    SELECT id_usuario
+                    FROM amigos_secreto
+                    WHERE id_amigo_secreto = ?
+                )
             ORDER BY RAND()
             LIMIT 1;
         `;
 
-        connection.query(queryOppositeGender, [excludeUserId, oppositeGender], (err, results) => {
+        // Intentar primero con el género opuesto
+        connection.query(queryOppositeGender, [excludeUserId, oppositeGender, excludeUserId], (err, results) => {
             if (err) {
                 return callback({ success: false, message: 'Error en la base de datos' });
             }
             if (results.length > 0) {
-                return callback(null, results[0]); // Usuario encontrado.
+                return callback(null, results[0]);
             }
 
-            // Si no hay del género opuesto, busca en general.
-            connection.query(queryAvailableUsers, [excludeUserId], (err, results) => {
+            // Si no hay del género opuesto, buscar en general
+            connection.query(queryAvailableUsers, [excludeUserId, excludeUserId], (err, results) => {
                 if (err) {
                     return callback({ success: false, message: 'Error en la base de datos' });
                 }
                 if (results.length > 0) {
-                    return callback(null, results[0]); // Usuario encontrado.
+                    return callback(null, results[0]);
                 }
 
-                // Si no hay usuarios disponibles.
+                // Si no hay usuarios disponibles
                 return callback({ success: false, message: 'No hay más amigos para asignar.' });
             });
         });
@@ -79,18 +93,13 @@ const AmigoSecretoModel = {
 
     saveAmigoSecreto: (userId, amigoId, callback) => {
         const insertQuery = `INSERT INTO amigos_secreto (id_usuario, id_amigo_secreto) VALUES (?, ?);`;
-        const updateQuery = `UPDATE usuarios SET emparejado = 1 WHERE id_usuario = ?;`;
+        const updateUserQuery = `UPDATE usuarios SET emparejado = 1 WHERE id_usuario = ?;`;
 
         connection.query(insertQuery, [userId, amigoId], (err, result) => {
             if (err) return callback(err);
-
-            connection.query(updateQuery, [userId], (err, result1) => {
+            connection.query(updateUserQuery, [userId], (err, result1) => {
                 if (err) return callback(err);
-
-                connection.query(updateQuery, [amigoId], (err, result2) => {
-                    if (err) return callback(err);
-                    callback(null, { insertResult: result, updateResult1: result1, updateResult2: result2 });
-                });
+                callback(null, { insertResult: result, updateResult: result1 });
             });
         });
     }

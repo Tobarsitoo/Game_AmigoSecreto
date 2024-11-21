@@ -588,7 +588,6 @@ progress {
 
 .img-fluid {
   max-width: 100%;
-  height: auto;
 }
 
 .img-thumbnail {
@@ -10823,7 +10822,7 @@ header {
 }
 
 section {
-  padding-top: 9rem;
+  padding-top: 5rem;
   padding-bottom: 9rem;
 }
 

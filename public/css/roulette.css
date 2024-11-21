@@ -1,0 +1,107 @@
+body {
+  background-color: #f8f9fa;
+}
+
+.wheel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  margin-top: 20px;
+}
+
+.wheel {
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  border: 8px solid #4a90e2;
+  border-radius: 10px;
+  position: relative;
+  background-color: #ffffff;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.wheel-strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+.wheel-strip {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.spin-btn {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.spin-btn button {
+  font-size: 20px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  background-color: #4a90e2;
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.spin-btn button:hover {
+  background-color: #357abd;
+}
+
+.modal-content {
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #ffffff;
+}
+
+.modal-header {
+  background-color: #4a90e2;
+  color: #ffffff;
+}
+
+.modal-body {
+  background-color: #ffffff;
+  color: #333;
+}
+
+.modal-footer {
+  background-color: #f1f1f1;
+}
+
+.modal-body ul {
+  max-height: 150px;
+  overflow-y: auto;
+  border-radius: 10px;
+  padding: 0;
+}
+
+.modal-body ul li {
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-body ul li:last-child {
+  border-bottom: none;
+}
+
+@keyframes scrollUp {
+  from {
+    top: 0;
+  }
+
+  to {
+    top: -400%;
+  }
+}
+
+.scrolling {
+  animation: scrollUp 5s ease-in-out forwards;
+}
