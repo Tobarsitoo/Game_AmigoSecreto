@@ -9,11 +9,15 @@ const UserModel = {
             FROM usuarios u
             JOIN agencias a ON u.area = a.cu
             WHERE u.id_usuario != ? 
-                AND u.emparejado = 0 
                 AND u.id_usuario NOT IN (
-                    SELECT id_usuario
-                    FROM amigos_secreto
+                    SELECT id_usuario 
+                    FROM amigos_secreto 
                     WHERE id_amigo_secreto = ?
+                )
+                AND u.id_usuario NOT IN (
+                    SELECT id_amigo_secreto 
+                    FROM amigos_secreto 
+                    WHERE id_usuario = ?
                 )
             ORDER BY RAND()
             LIMIT 1;
@@ -25,18 +29,22 @@ const UserModel = {
             JOIN agencias a ON u.area = a.cu
             WHERE u.id_usuario != ? 
                 AND u.genero = ? 
-                AND u.emparejado = 0 
                 AND u.id_usuario NOT IN (
-                    SELECT id_usuario
-                    FROM amigos_secreto
+                    SELECT id_usuario 
+                    FROM amigos_secreto 
                     WHERE id_amigo_secreto = ?
+                )
+                AND u.id_usuario NOT IN (
+                    SELECT id_amigo_secreto 
+                    FROM amigos_secreto 
+                    WHERE id_usuario = ?
                 )
             ORDER BY RAND()
             LIMIT 1;
         `;
 
         // Intentar primero con el género opuesto
-        connection.query(queryOppositeGender, [excludeUserId, oppositeGender, excludeUserId], (err, results) => {
+        connection.query(queryOppositeGender, [excludeUserId, oppositeGender, excludeUserId, excludeUserId], (err, results) => {
             if (err) {
                 return callback({ success: false, message: 'Error en la base de datos' });
             }
@@ -45,7 +53,7 @@ const UserModel = {
             }
 
             // Si no hay del género opuesto, buscar en general
-            connection.query(queryAvailableUsers, [excludeUserId, excludeUserId], (err, results) => {
+            connection.query(queryAvailableUsers, [excludeUserId, excludeUserId, excludeUserId], (err, results) => {
                 if (err) {
                     return callback({ success: false, message: 'Error en la base de datos' });
                 }
