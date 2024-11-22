@@ -9,7 +9,7 @@ const DulceModel = {
             callback(null, results.insertId);
         });
     },
-    
+
     //Obtener dulces
     getDulcesByUser: (userId, callback) => {
         const query = 'SELECT * FROM dulces WHERE id_usuario_fk = ?';
@@ -23,7 +23,9 @@ const DulceModel = {
     deleteDulce: (dulceId, callback) => {
         const query = 'DELETE FROM dulces WHERE id_dulce = ?';
         connection.query(query, [dulceId], (err, result) => {
-            if (err) return callback(err);
+            if (err) {
+                return callback(err);
+            }
             callback(null, result);
         });
     }
@@ -47,12 +49,14 @@ const RegaloModel = {
             callback(null, results);
         });
     },
-    
+
     //Eliminar regalo
     deleteRegalo: (regaloId, callback) => {
         const query = 'DELETE FROM regalos WHERE id_regalo = ?';
         connection.query(query, [regaloId], (err, results) => {
-            if (err) return callback(err);
+            if (err) {
+                return callback(err);
+            }
             callback(null, results);
         });
     }

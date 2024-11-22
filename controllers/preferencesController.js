@@ -95,10 +95,10 @@ exports.deleteRegalo = (req, res) => {
     RegaloModel.deleteRegalo(regaloId, (err, result) => {
         if (err) {
             console.error(err);
-            AuditoriaModel.registrarAuditoria(userId, ip, 'Error al eliminar regalo', `Intento fallido de eliminar regalo con ID: ${regaloId}`);
+            AuditaModel.registrarAuditoria(userId, ip, 'Error al eliminar regalo', `Intento fallido de eliminar regalo con ID: ${regaloId}`);
             return res.status(500).json({ success: false, message: 'Error al eliminar el regalo' });
         }
-        AuditoriaModel.registrarAuditoria(userId, ip, 'Regalo eliminado', `Regalo eliminado con ID: ${regaloId}`);
+        AuditModel.registrarAuditoria(userId, ip, 'Regalo eliminado', `Regalo eliminado con ID: ${regaloId}`);
         res.json({ success: true, data: regaloId });
     });
 };

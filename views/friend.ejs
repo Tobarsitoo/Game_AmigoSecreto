@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Amigo Secreto - Admin</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        /* Estilos personalizados */
+        #friendTable {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #friendTable thead {
+            background-color: #00712D;
+        }
+
+        #friendTable thead th {
+            color: #FFFFFF;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #friendTable tbody tr:nth-child(odd) {
+            background-color: #FFF3E0; /* Suave naranja */
+        }
+
+        #friendTable tbody tr:nth-child(even) {
+            background-color: #E8F5E9; /* Suave verde */
+        }
+
+        #friendTable tbody tr:hover {
+            background-color: #d1e9f6; /* Resaltado naranja */
+            color: #FFFFFF;
+            cursor: pointer;
+        }
+
+        #friendTable td, #friendTable th {
+            border: 1px solid #CCCCCC;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .card-header {
+            background-color: #00712D;
+            color: #FFFFFF;
+            font-size: 24px;
+        }
+    </style>
+</head>
+
+
+<body id="page-top">
+    <!-- Navbar-->
+    <%- include('../partials/navbaradmin'); %>
+
+        <!-- Sección de tabla -->
+        <section id="tabla" class="py-5">
+            <div class="container" style="padding-top: 161px; padding-bottom: 315px;">
+                <div class="card shadow-lg">
+                    <div class="card-header text-center">
+                        <h2>Tabla de Amigos Asignados</h2>
+                    </div>
+                    <div class="card-body bg-light table-responsive">
+                        <table id="friendTable" class="table table-hover table-bordered">
+                            <thead class="text-white">
+                                <tr class="text-center">
+                                    <th>Usuario</th>
+                                    <th>Género</th>
+                                    <th>Amigo Secreto</th>
+                                    <th>Género del Amigo</th>
+                                    <th>Área del Amigo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (friends.length> 0) { %>
+                                    <% friends.forEach(friend=> { %>
+                                        <tr>
+                                            <td>
+                                                <%= friend.usuario_nombre %>
+                                            </td>
+                                            <td>
+                                                <%= friend.usuario_genero==='M' ? 'Masculino' : 'Femenino' %>
+                                            </td>
+                                            <td>
+                                                <%= friend.amigo_nombre %>
+                                            </td>
+                                            <td>
+                                                <%= friend.amigo_genero==='M' ? 'Masculino' : 'Femenino' %>
+                                            </td>
+                                            <td>
+                                                <%= friend.amigo_area %>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="5" class="text-center">No hay amigos asignados</td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <%- include('../partials/footer'); %>
+
+            <!-- Scripts -->
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+            <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap5.min.js"></script>
+            <script>
+                $(document).ready(function () {
+                    $('#friendTable').DataTable({
+                        language: {
+                            search: "Buscar:",
+                            lengthMenu: "Mostrar _MENU_ registros",
+                            info: "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                            zeroRecords: "No se encontraron resultados",
+                            emptyTable: "No hay datos disponibles",
+                            paginate: {
+                                first: "Primero",
+                                previous: "Anterior",
+                                next: "Siguiente",
+                                last: "Último"
+                            }
+                        },
+                        pageLength: 5
+                    });
+                });
+            </script>
+</body>
+
+</html>

@@ -12,81 +12,7 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <style>
-        /* Estilos personalizados para la tabla */
-        table.dataTable {
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        table.dataTable th,
-        table.dataTable td {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            background-color: #FF9100;
-            color: white;
-            border-radius: 30px;
-            transition: background-color 0.3s ease;
-        }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background-color: #00712D;
-        }
-
-        .table-hover tbody tr:hover {
-            background-color: #D1E9F6;
-        }
-
-        .btn-edit,
-        .btn-delete {
-            border-radius: 20px;
-            padding: 5px 10px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-edit {
-            background-color: #FF9100;
-            color: white;
-        }
-
-        .btn-edit:hover {
-            background-color: #E67E22;
-        }
-
-        .btn-delete {
-            background-color: #E74C3C;
-            color: white;
-        }
-
-        .btn-delete:hover {
-            background-color: #C0392B;
-        }
-
-        /* Estilo del encabezado de la tabla */
-        .table thead th {
-            background-color: #00712D;
-            color: white;
-            font-weight: bold;
-            border: none;
-        }
-
-        /* Botón "Agregar Usuario" */
-        .btn-success {
-            background-color: #28A745;
-            border-radius: 30px;
-            padding: 12px 25px;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-        }
-    </style>
+    <link rel="stylesheet" href="css/admin.css">
 </head>
 
 <body id="page-top">
@@ -231,7 +157,7 @@
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="fas fa-building"></i></span>
                                             <input type="number" class="form-control" id="area" name="area"
-                                                placeholder="Ingrese el área" required>
+                                                placeholder="Ingrese el número de la agencia" required>
                                         </div>
                                     </div>
                                 </div>

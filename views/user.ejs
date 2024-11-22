@@ -172,6 +172,7 @@
             <script src="https://cdn.datatables.net/2.1.3/js/dataTables.js"></script>
             <script src="https://cdn.datatables.net/2.1.3/js/dataTables.bootstrap5.js"></script>
             <script src="/js/scripts.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 $(document).ready(function () {
                     // Inicializa DataTables
@@ -201,6 +202,35 @@
                         ]
                     });
 
+                    // Cargar los dulces desde el servidor
+                    $.get('/preferences/dulces', function (response) {
+                        if (response.success) {
+                            response.dulces.forEach(dulce => {
+                                dulceTable.row.add([
+                                    dulce.dulce,
+                                    `<button class="btn btn-danger btn-sm delete-dulce" data-id="${dulce.id_dulce}">Eliminar</button>`
+                                ]).draw();
+                            });
+                        } else {
+                            console.error('Error al cargar los dulces:', response.message);
+                        }
+                    });
+
+                    // Cargar los regalos desde el servidor
+                    $.get('/preferences/regalos', function (response) {
+                        if (response.success) {
+                            response.regalos.forEach(regalo => {
+                                regaloTable.row.add([
+                                    regalo.regalo,
+                                    `<button class="btn btn-danger btn-sm delete-regalo" data-id="${regalo.id_regalo}">Eliminar</button>`
+                                ]).draw();
+                            });
+                        } else {
+                            console.error('Error al cargar los regalos:', response.message);
+                        }
+                    });
+
+
                     // Función para agregar dulce
                     $('#addDulce').click(function () {
                         const dulce = $('#dulceInput').val().trim();
@@ -212,12 +242,31 @@
                                         `<button class="btn btn-danger btn-sm delete-dulce" data-id="${response.id}">Eliminar</button>`
                                     ]).draw();
                                     $('#dulceInput').val('');
+                                    Swal.fire({
+                                        title: '¡Éxito!',
+                                        text: 'Dulce agregado correctamente.',
+                                        icon: 'success',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#4A90E2'
+                                    });
                                 } else {
-                                    alert(response.message);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#E74C3C'
+                                    });
                                 }
                             });
                         } else {
-                            alert('Por favor ingrese un dulce');
+                            Swal.fire({
+                                title: 'Advertencia',
+                                text: 'Por favor ingrese un dulce.',
+                                icon: 'warning',
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor: '#F1C40F',
+                            });
                         }
                     });
 
@@ -232,89 +281,115 @@
                                         `<button class="btn btn-danger btn-sm delete-regalo" data-id="${response.id}">Eliminar</button>`
                                     ]).draw();
                                     $('#regaloInput').val('');
+                                    Swal.fire({
+                                        title: '¡Éxito!',
+                                        text: 'Regalo agregado correctamente.',
+                                        icon: 'success',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#4A90E2'
+                                    });
                                 } else {
-                                    alert(response.message);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: response.message,
+                                        icon: 'error',
+                                        confirmButtonText: 'Aceptar',
+                                        confirmButtonColor: '#E74C3C'
+                                    });
                                 }
                             });
                         } else {
-                            alert('Por favor ingrese un regalo');
+                            Swal.fire({
+                                title: 'Advertencia',
+                                text: 'Por favor ingrese un regalo.',
+                                icon: 'warning',
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor: '#F1C40F',
+                            });
                         }
                     });
 
                     // Función para eliminar dulce
                     $('#dulceTable tbody').on('click', '.delete-dulce', function () {
                         const button = $(this);
-                        const dulceId = button.data('id');
+                        const dulceId = $(this).data('id');;
 
-                        if (confirm('¿Está seguro de que desea eliminar este dulce?')) {
-                            $.ajax({
-                                url: `/preferences/dulces/${dulceId}`,
-                                type: 'DELETE',
-                                success: function (response) {
-                                    if (response.success) {
-                                        dulceTable.row(button.parents('tr')).remove().draw();
-                                    } else {
-                                        alert('Error al eliminar el dulce');
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'No podrás revertir esto.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#4A90E2',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: 'Cancelar',
+                            confirmButtonText: 'Sí, eliminarlo'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: `/preferences/dulces/${dulceId}`,
+                                    type: 'DELETE',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            dulceTable.row(button.parents('tr')).remove().draw();
+                                            Swal.fire({
+                                                title: 'Eliminado',
+                                                text: 'El dulce ha sido eliminado.',
+                                                icon: 'success',
+                                                confirmButtonText: 'Aceptar',
+                                                confirmButtonColor: '#4A90E2'
+                                            });
+                                        } else {
+                                            Swal.fire('Error', 'Error al eliminar el dulce.', 'error');
+                                        }
+                                    },
+                                    error: function () {
+                                        Swal.fire('Error', 'Error en la solicitud.', 'error');
                                     }
-                                },
-                                error: function () {
-                                    alert('Error en la solicitud');
-                                }
-                            });
-                        }
+                                });
+                            }
+                        });
                     });
 
                     // Función para eliminar regalo
                     $('#regaloTable tbody').on('click', '.delete-regalo', function () {
                         const button = $(this);
-                        const regaloId = button.data('id');
+                        const regaloId = $(this).data('id');;
 
-                        if (confirm('¿Está seguro de que desea eliminar este regalo?')) {
-                            $.ajax({
-                                url: `/preferences/regalos/${regaloId}`,
-                                type: 'DELETE',
-                                success: function (response) {
-                                    if (response.success) {
-                                        regaloTable.row(button.parents('tr')).remove().draw();
-                                    } else {
-                                        alert('Error al eliminar el regalo');
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'No podrás revertir esto.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            cancelButtonText: 'Cancelar',
+                            confirmButtonText: 'Sí, eliminarlo'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.ajax({
+                                    url: `/preferences/regalos/${regaloId}`,
+                                    type: 'DELETE',
+                                    success: function (response) {
+                                        if (response.success) {
+                                            regaloTable.row(button.parents('tr')).remove().draw();
+                                            Swal.fire({
+                                                title: 'Eliminado',
+                                                text: 'El dulce ha sido eliminado.',
+                                                icon: 'success',
+                                                confirmButtonText: 'Aceptar',
+                                                confirmButtonColor: '#4A90E2'
+                                            });
+                                        } else {
+                                            Swal.fire('Error', 'Error al eliminar el regalo.', 'error');
+                                        }
+                                    },
+                                    error: function () {
+                                        Swal.fire('Error', 'Error en la solicitud.', 'error');
                                     }
-                                },
-                                error: function () {
-                                    alert('Error en la solicitud');
-                                }
-                            });
-                        }
+                                });
+                            }
+                        });
                     });
-
-                    // Función para cargar dulces y regalos desde el servidor
-                    function loadDulces() {
-                        $.get('/preferences/dulces', function (response) {
-                            if (response.success) {
-                                response.dulces.forEach(dulce => {
-                                    dulceTable.row.add([
-                                        dulce.dulce,
-                                        `<button class="btn btn-danger btn-sm delete-dulce" data-id="${dulce.id_dulce}">Eliminar</button>`
-                                    ]).draw();
-                                });
-                            }
-                        });
-                    }
-
-                    function loadRegalos() {
-                        $.get('/preferences/regalos', function (response) {
-                            if (response.success) {
-                                response.regalos.forEach(regalo => {
-                                    regaloTable.row.add([
-                                        regalo.regalo,
-                                        `<button class="btn btn-danger btn-sm delete-regalo" data-id="${regalo.id_regalo}">Eliminar</button>`
-                                    ]).draw();
-                                });
-                            }
-                        });
-                    }
-                    loadDulces();
-                    loadRegalos();
                 });
             </script>
             <script>

@@ -1,0 +1,72 @@
+/* Estilos personalizados para la tabla */
+table.dataTable {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+table.dataTable th,
+table.dataTable td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+  background-color: #ff9100;
+  color: white;
+  border-radius: 30px;
+  transition: background-color 0.3s ease;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+  background-color: #00712d;
+}
+
+.table-hover tbody tr:hover {
+  background-color: #d1e9f6;
+}
+
+.btn-edit,
+.btn-delete {
+  border-radius: 20px;
+  padding: 5px 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-edit {
+  background-color: #ff9100;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #e67e22;
+}
+
+.btn-delete {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #c0392b;
+}
+
+/* Estilo del encabezado de la tabla */
+.table thead th {
+  background-color: #00712d;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+/* Botón "Agregar Usuario" */
+.btn-success {
+  background-color: #28a745;
+  border-radius: 30px;
+  padding: 12px 25px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+}
