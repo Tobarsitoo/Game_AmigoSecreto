@@ -51,6 +51,10 @@ table.dataTable td {
   background-color: #c0392b;
 }
 
+.dataTables_length {
+  padding-bottom: 18px;
+}
+
 /* Estilo del encabezado de la tabla */
 .table thead th {
   background-color: #00712d;

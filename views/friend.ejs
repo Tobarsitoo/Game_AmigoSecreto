@@ -4,55 +4,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Amigo Secreto - Admin</title>
+    <title>Tabla de Amigos Secretos</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/friend.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.bootstrap5.min.css" />
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <style>
-        /* Estilos personalizados */
-        #friendTable {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        #friendTable thead {
-            background-color: #00712D;
-        }
-
-        #friendTable thead th {
-            color: #FFFFFF;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-
-        #friendTable tbody tr:nth-child(odd) {
-            background-color: #FFF3E0; /* Suave naranja */
-        }
-
-        #friendTable tbody tr:nth-child(even) {
-            background-color: #E8F5E9; /* Suave verde */
-        }
-
-        #friendTable tbody tr:hover {
-            background-color: #d1e9f6; /* Resaltado naranja */
-            color: #FFFFFF;
-            cursor: pointer;
-        }
-
-        #friendTable td, #friendTable th {
-            border: 1px solid #CCCCCC;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .card-header {
-            background-color: #00712D;
-            color: #FFFFFF;
-            font-size: 24px;
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 
@@ -61,51 +19,57 @@
     <%- include('../partials/navbaradmin'); %>
 
         <!-- Sección de tabla -->
-        <section id="tabla" class="py-5">
-            <div class="container" style="padding-top: 161px; padding-bottom: 315px;">
+        <section id="tabla" class="">
+            <div class="container" style="padding-top: 161px; padding-bottom: 158px;">
+                <h1 class="text-center">-🎈🌟 Amigos Secretos Asignados🌟🎈-</h1>
                 <div class="card shadow-lg">
-                    <div class="card-header text-center">
-                        <h2>Tabla de Amigos Asignados</h2>
+                    <div class="card-header text-center text-white" style="background-color: #ff9100;">
                     </div>
-                    <div class="card-body bg-light table-responsive">
-                        <table id="friendTable" class="table table-hover table-bordered">
-                            <thead class="text-white">
-                                <tr class="text-center">
-                                    <th>Usuario</th>
-                                    <th>Género</th>
-                                    <th>Amigo Secreto</th>
-                                    <th>Género del Amigo</th>
-                                    <th>Área del Amigo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (friends.length> 0) { %>
-                                    <% friends.forEach(friend=> { %>
-                                        <tr>
-                                            <td>
-                                                <%= friend.usuario_nombre %>
-                                            </td>
-                                            <td>
-                                                <%= friend.usuario_genero==='M' ? 'Masculino' : 'Femenino' %>
-                                            </td>
-                                            <td>
-                                                <%= friend.amigo_nombre %>
-                                            </td>
-                                            <td>
-                                                <%= friend.amigo_genero==='M' ? 'Masculino' : 'Femenino' %>
-                                            </td>
-                                            <td>
-                                                <%= friend.amigo_area %>
-                                            </td>
-                                        </tr>
-                                        <% }); %>
-                                            <% } else { %>
-                                                <tr>
-                                                    <td colspan="5" class="text-center">No hay amigos asignados</td>
-                                                </tr>
-                                                <% } %>
-                            </tbody>
-                        </table>
+                    <div class="card-body bg-light">
+                        <div class="table-responsive mt-1">
+                            <table id="friendTable" class="table table-hover table-bordered">
+                                <thead class="text-white">
+                                    <tr class="text-center">
+                                        <th>Usuario</th>
+                                        <th>Género</th>
+                                        <th>Amigo Secreto</th>
+                                        <th>Género del Amigo</th>
+                                        <th>Área del Amigo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% if (friends.length> 0) { %>
+                                        <% friends.forEach(friend=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= friend.usuario_nombre %>
+                                                </td>
+                                                <td>
+                                                    <%= friend.usuario_genero==='M' ? 'Masculino' : 'Femenino' %>
+                                                </td>
+                                                <td>
+                                                    <%= friend.amigo_nombre %>
+                                                </td>
+                                                <td>
+                                                    <%= friend.amigo_genero==='M' ? 'Masculino' : 'Femenino' %>
+                                                </td>
+                                                <td>
+                                                    <%= friend.amigo_area %>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <tr>
+                                                        <td class="text-center">No hay información disponible</td>
+                                                        <td class="text-center">No hay información disponible</td>
+                                                        <td class="text-center">No hay información disponible</td>
+                                                        <td class="text-center">No hay información disponible</td>
+                                                        <td class="text-center">No hay información disponible</td>
+                                                    </tr>
+                                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,11 +79,12 @@
         <%- include('../partials/footer'); %>
 
             <!-- Scripts -->
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+            <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+            <script type="text/javascript" src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
             <script
                 src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-            <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
-            <script src="https://cdn.datatables.net/2.1.4/js/dataTables.bootstrap5.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 $(document).ready(function () {
                     $('#friendTable').DataTable({
@@ -135,8 +100,7 @@
                                 next: "Siguiente",
                                 last: "Último"
                             }
-                        },
-                        pageLength: 5
+                        }
                     });
                 });
             </script>

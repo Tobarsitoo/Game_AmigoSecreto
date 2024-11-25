@@ -52,6 +52,28 @@ const UserModel = {
                 callback(null, results);
             });
         });
+    },
+
+    editUser: (id, userData, callback) => {
+        const { cedula, nombres, area, estado, fecha_nacimiento, genero, rol } = userData;
+
+        let query = `
+            UPDATE usuarios 
+            SET cedula = ?, nombres = ?, area = ?, estado = ?, fecha_nacimiento = ?, genero = ?, rol = ?
+            WHERE id_usuario = ?
+        `;
+        const values = [cedula, nombres, area, estado, fecha_nacimiento, genero, rol, id];
+        connection.query(query, values, (err, results) => {
+            if (err) return callback(err);
+            callback(null, results);
+        });
+    },
+
+    deleteUser: (id, callback) => {
+        connection.query('DELETE FROM usuarios WHERE id_usuario = ?', [id], (err, results) => {
+            if (err) return callback(err);
+            callback(null, results);
+        });
     }
 };
 

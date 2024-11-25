@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Amigo Secreto - Panel de Administración</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="stylesheet" href="/css/rouletteAdmin.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.4/css/dataTables.dataTables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body id="page-top">
+    <!-- Navbar-->
+    <%- include('../partials/navbaradmin'); %>
+
+        <!-- Sección de Administración -->
+        <section id="admin-panel" class="py-5">
+            <div class="container" style="padding-top: 102px; padding-bottom: 349px;">
+                <div class="card shadow-lg">
+                    <div class="card-header text-white" style="background-color: #00712d;">
+                        <h4 class="text-center mb-0">Panel de Administración</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="admin-form">
+                            <!-- Fechas -->
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <label for="startDate" class="form-label">Fecha de inicio del Amigo Secreto:</label>
+                                    <input type="date" id="startDate" class="form-control" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="assignDate" class="form-label">Fecha de asignación automática:</label>
+                                    <input type="date" id="assignDate" class="form-control" required />
+                                </div>
+                                <div class="justify-content-center d-flex mt-3">
+                                    <button type="submit" id="" class="btn btn-success mt-2 w-25">
+                                        <i class="fas fa-calendar"></i> Asignar fechas de Amigo Secreto
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <form>
+                            <!-- Botones de acciones -->
+                            <div class="row text-center">
+                                <div class="col-md-4 mb-3">
+                                    <button type="button" id="resetGame" class="btn btn-danger w-100">
+                                        <i class="fas fa-redo-alt"></i> Reiniciar Juego
+                                    </button>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <button type="button" id="resetUsers" class="btn btn-warning w-100">
+                                        <i class="fas fa-users-slash"></i> Reiniciar Usuarios
+                                    </button>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <button type="button" id="resetFriends" class="btn btn-success w-100">
+                                        <i class="fas fa-user-friends"></i> Reiniciar Amigos Secretos
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <%- include('../partials/footer'); %>
+
+            <!-- Scripts -->
+            <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+            <script src="https://cdn.datatables.net/2.1.4/js/dataTables.js"></script>
+            <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+            <script
+                src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                $(document).ready(function () {
+                    // Alerta para botón "Asignar fechas"
+                    $('#admin-form').on('submit', function (e) {
+                        e.preventDefault();
+                        const startDate = $('#startDate').val();
+                        const assignDate = $('#assignDate').val();
+
+                        if (!startDate || !assignDate) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'Por favor selecciona ambas fechas antes de continuar.',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                        } else if (new Date(startDate) > new Date(assignDate)) {
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'La fecha de inicio no puede ser posterior a la fecha de asignación automática.',
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: '¿Estás seguro?',
+                                text: `Fecha de inicio: ${startDate} - Fecha de asignación: ${assignDate}`,
+                                icon: 'question',
+                                showCancelButton: true,
+                                confirmButtonText: 'Sí, asignar',
+                                cancelButtonText: 'Cancelar',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    // Lógica para asignar las fechas
+                                    Swal.fire('Fechas Asignadas', 'Las fechas han sido actualizadas correctamente.', 'success');
+                                }
+                            });
+                        }
+                    });
+
+                    $('#resetGame').on('click', function () {
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'Esto reiniciará todo el juego y no se podrá deshacer.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, reiniciar',
+                            cancelButtonText: 'Cancelar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Lógica para reiniciar el juego
+                                Swal.fire('Reiniciado', 'El juego ha sido reiniciado.', 'success');
+                            }
+                        });
+                    });
+
+                    $('#resetUsers').on('click', function () {
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'Esto eliminará todos los usuarios y no se podrá deshacer.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, reiniciar',
+                            cancelButtonText: 'Cancelar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Lógica para reiniciar usuarios
+                                Swal.fire('Reiniciado', 'Todos los usuarios han sido reiniciados.', 'success');
+                            }
+                        });
+                    });
+
+                    $('#resetFriends').on('click', function () {
+                        Swal.fire({
+                            title: '¿Estás seguro?',
+                            text: 'Esto eliminará todas las asignaciones de amigos secretos.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, reiniciar',
+                            cancelButtonText: 'Cancelar',
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Lógica para reiniciar amigos secretos
+                                Swal.fire('Reiniciado', 'Las asignaciones han sido eliminadas.', 'success');
+                            }
+                        });
+                    });
+                });
+            </script>
+</body>
+
+</html>

@@ -53,18 +53,19 @@
             <div class="container mt-5">
                 <div class="card mb-3 shadow-lg">
                     <div class="card-header text-center bg-success text-white">
-                        <h2 class="fw-bold">Tabla de Usuarios</h2>
+                        <h2 class="fw-bold">👤 TABLA DE USUARIOS 👤</h2>
                     </div>
                     <div class="card-body bg-light">
                         <!-- Tabla de Usuarios -->
                         <div class="table-responsive mt-4">
                             <table id="usersTable" class="table table-hover table-bordered">
                                 <thead class="text-white">
-                                    <tr class="text-center">
+                                    <tr class="">
                                         <th>ID</th>
                                         <th>Nombre</th>
                                         <th>Género</th>
                                         <th>Cédula</th>
+                                        <th>Estado</th>
                                         <th>Rol</th>
                                         <th>Acciones</th>
                                     </tr>
@@ -80,7 +81,7 @@
                 <!-- Formulario para agregar usuario -->
                 <div class="card">
                     <div class="card-header text-center text-white" style="background-color: #FF9100;">
-                        <h4>Agregar Nuevo Usuario</h4>
+                        <h4>🧍‍♂️- AGREGAR NUEVO USUARIO -🧍‍♂️</h4>
                     </div>
                     <div class="card-body">
                         <form id="addUserForm">
@@ -169,6 +170,89 @@
                     </div>
                 </div>
             </div>
+            <!-- Modal de Edición -->
+            <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editUserModalLabel">Editar Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editUserForm">
+                                <input type="hidden" id="editUserId" name="id_usuario">
+                                <div class="mb-3">
+                                    <label for="editNombre" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="editNombre" name="nombre" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editGenero" class="form-label">Género</label>
+                                    <select class="form-control" id="editGenero" name="genero" required>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editCedula" class="form-label">Cédula</label>
+                                    <input type="text" class="form-control" id="editCedula" name="cedula" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editCuenta" class="form-label">Cuenta</label>
+                                    <input type="text" class="form-control" id="editCuenta" name="cuenta" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editEstado" class="form-label">Estado</label>
+                                    <select name="estado" id="editEstado" class="form-control" required>
+                                        <option value="1">Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editArea" class="form-label">Area</label>
+                                    <input type="text" class="form-control" id="editArea" name="area" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editFechaNa" class="form-label">Fecha Nacimiento</label>
+                                    <input type="date" class="form-control" id="editFechaNa" name="fecha_nacimiento"
+                                        required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editRol" class="form-label">Rol</label>
+                                    <select class="form-control" id="editRol" name="rol" required>
+                                        <option value="administrador">Administrador</option>
+                                        <option value="usuario">Usuario</option>
+                                    </select>
+                                </div>
+                                <div class="text-center mt-4">
+                                    <button type="submit" class="btn btn-success btn-lg">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal de Eliminación -->
+            <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteUserModalLabel">Eliminar Usuario</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estás seguro de que deseas eliminar este usuario?</p>
+                            <input type="hidden" id="deleteUserId">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Footer-->
@@ -181,6 +265,7 @@
             <script
                 src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <!-- Lógica de DataTables -->
             <script>
                 $(document).ready(function () {
                     // Inicializa DataTable
@@ -225,6 +310,12 @@
                                 }
                             },
                             { data: 'cedula' },
+                            { 
+                                data: 'estado',
+                                render: function (data) {
+                                    return data === '1' ? 'Activo' : data === '0' ? 'Inactivo' : 'Sin estado';
+                                } 
+                            },
                             { data: 'rol' },
                             {
                                 data: null,
@@ -242,7 +333,9 @@
                     });
                 });
             </script>
+            <!-- Lógica de agregar usuario -->
             <script>
+                // Agregar usuario
                 $(document).ready(function () {
                     // Manejar el envío del formulario de agregar usuario
                     $('#addUserForm').on('submit', function (e) {
@@ -264,7 +357,13 @@
                             contentType: 'application/json',
                             data: JSON.stringify(formData),
                             success: function (response) {
-                                Swal.fire('Éxito', response.message, 'success');
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '¡Usuario agregado!',
+                                    text: response.message,
+                                    confirmButtonColor: '#ff9100',
+                                    confirmButtonText: 'Aceptar'
+                                });
                                 $('#addUserForm')[0].reset();
                                 $('#usersTable').DataTable().ajax.reload();
                             },
@@ -274,6 +373,107 @@
                         });
                     });
                 });
+            </script>
+            <!-- Lógica de edición de usuario -->
+            <script>
+                // Mostrar el modal de edición con los datos del usuario
+                $(document).on('click', '.editUserBtn', function () {
+                    const userId = $(this).data('id');
+
+                    // Obtener datos del usuario a editar (AJAX o de alguna variable de datos)
+                    $.ajax({
+                        url: `/admin/users/${userId}`,
+                        method: 'GET',
+                        success: function (data) {
+                            let fecha = new Date(data.fecha_nacimiento);
+                            let fechaFormateada = fecha.getFullYear() + '-' + (fecha.getMonth() + 1).toString().padStart(2, '0') + '-' + fecha.getDate().toString().padStart(2, '0');
+                            
+                            $('#editUserId').val(data.id_usuario);
+                            $('#editNombre').val(data.nombres);
+                            $('#editGenero').val(data.genero);
+                            $('#editCuenta').val(data.cuenta || 'Sin cuenta');
+                            $('#editEstado').val(data.estado);
+                            $('#editArea').val(data.area);
+                            $('#editFechaNa').val(fechaFormateada);
+                            $('#editCedula').val(data.cedula);
+                            $('#editRol').val(data.rol);
+                            $('#editUserModal').modal('show');
+                        }
+                    });
+                });
+
+                // Manejar el envío del formulario de edición
+                $('#editUserForm').on('submit', function (e) {
+                    e.preventDefault();
+
+                    const formData = {
+                        id_usuario: $('#editUserId').val(),
+                        nombres: $('#editNombre').val(),
+                        genero: $('#editGenero').val(),
+                        cedula: $('#editCedula').val(),
+                        cuenta: $('#editCuenta').val() || null,
+                        estado: $('#editEstado').val(),
+                        contraseña: $('#editContraseña').val(),
+                        area: $('#editArea').val(),
+                        fecha_nacimiento: $('#editFechaNa').val(),
+                        rol: $('#editRol').val()
+                    };
+
+                    $.ajax({
+                        url: `/admin/users/${formData.id_usuario}`,
+                        method: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(formData),
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Usuario actualizado!',
+                                text: response.message,
+                                confirmButtonColor: '#ff9100',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            $('#usersTable').DataTable().ajax.reload();
+                            $('#editUserModal').modal('hide');
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error', xhr.responseJSON.error || 'Error al actualizar el usuario', 'error');
+                        }
+                    });
+                });
+            </script>
+            <!-- Lógica de eliminación de usuario -->
+            <script>
+                // Mostrar el modal de eliminación
+                $(document).on('click', '.deleteUserBtn', function () {
+                    const userId = $(this).data('id');
+                    $('#deleteUserId').val(userId);
+                    $('#deleteUserModal').modal('show');
+                });
+
+                // Confirmar eliminación
+                $('#confirmDeleteBtn').on('click', function () {
+                    const userId = $('#deleteUserId').val();
+
+                    $.ajax({
+                        url: `/admin/users/${userId}`,
+                        method: 'DELETE',
+                        success: function (response) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: '¡Usuario eliminado!',
+                                text: response.message,
+                                confirmButtonColor: '#ff9100',
+                                confirmButtonText: 'Aceptar'
+                            });
+                            $('#usersTable').DataTable().ajax.reload();
+                            $('#deleteUserModal').modal('hide');
+                        },
+                        error: function (xhr) {
+                            Swal.fire('Error', xhr.responseJSON.error || 'Error al eliminar el usuario', 'error');
+                        }
+                    });
+                });
+
             </script>
 </body>
 

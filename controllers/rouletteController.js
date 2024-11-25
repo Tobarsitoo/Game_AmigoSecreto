@@ -1,5 +1,42 @@
 const { UserModel, AmigoSecretoModel } = require('../models/rouletteModel');
 const AuditModel = require('../models/auditModel');
+const DateModel = require('../models/dateModel');
+
+// Validar y asignar amigo secreto
+exports.validateAndAssignAmigoSecreto = (req, res) => {
+    const userId = req.session.id_usuario;
+
+    DateModel.getDates((err, dates) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ success: false, message: 'Error al obtener las fechas' });
+        }
+
+        const { fecha_juego, fecha_asignacion } = dates;
+        const now = new Date();
+
+        if (now < new Date(fecha_juego) || now > new Date(fecha_asignacion)) {
+            return res.status(403).json({ 
+                success: false, 
+                message: 'La ruleta solo puede girarse dentro del rango de fechas permitido.' 
+            });
+        }
+
+        if (now >= new Date(fecha_asignacion)) {
+            this.assignAmigoSecreto(req, res); // Llama al método para asignar automáticamente
+            return;
+        }
+
+        let fechaJ = new Date(fecha_juego);
+        let fecha_inicio = fechaJ.getFullYear() + '-' + (fechaJ.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaJ.getDate().toString().padStart(2, '0');
+
+        let fechaA = new Date(fecha_asignacion);
+        let fecha_fin = fechaA.getFullYear() + '-' + (fechaA.getMonth() + 1).toString().padStart(2, '0') + '-' + fechaA.getDate().toString().padStart(2, '0');
+
+        const data = {fecha_inicio , fecha_fin}
+        return res.status(200).json({ success: true, message: 'La ruleta está habilitada para girar.', fechas: data  });
+    });
+};
 
 // Controlador para asignar amigo secreto
 exports.assignAmigoSecreto = (req, res) => {
