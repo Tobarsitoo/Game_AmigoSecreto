@@ -1,5 +1,8 @@
 const UserModel = require('../models/userModel');
 const AuditModel = require('../models/auditModel');
+const { AmigoSecretoModel } = require('../models/rouletteModel');
+const { assignAmigoSecretoAutomatico } = require('./rouletteController'); 
+const DateModel = require('../models/dateModel');
 
 exports.login = (req, res) => {
     const { usuario, contraseña } = req.body;
@@ -65,10 +68,40 @@ exports.admindashboard = (req, res) => {
 };
 
 exports.userdashboard = (req, res) => {
+    const userId = req.session.id_usuario;
+
     if (req.session.loggedin && req.session.rol.trim() === 'usuario') {
-        res.render('user', {
-            nombre: req.session.nombre,
-            id_usuario: req.session.id_usuario
+        // Verificar si ya se ha asignado un amigo secreto
+        AmigoSecretoModel.getAmigo(userId, (err, existingAmigo) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Error al verificar el amigo secreto' });
+            }
+
+            // Si no se ha asignado un amigo secreto, intentar asignarlo
+            if (!existingAmigo) {
+                // Obtener las fechas de asignación y juego
+                DateModel.getDates((err, dates) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).json({ success: false, message: 'Error al obtener las fechas' });
+                    }
+
+                    const { fecha_asignacion } = dates;
+                    const now = new Date();
+
+                    // Si la fecha de asignación es menor o igual a la fecha actual, asignar el amigo secreto
+                    if (now >= new Date(fecha_asignacion)) {
+                        // Llamar a la función para asignar amigo secreto
+                        assignAmigoSecretoAutomatico(req, res);
+                    }
+                });
+            } 
+
+            // Si ya tiene un amigo asignado, continuar con la carga del dashboard
+            res.render('user', {
+                nombre: req.session.nombre,
+                id_usuario: req.session.id_usuario
+            });
         });
     } else {
         res.redirect('/');

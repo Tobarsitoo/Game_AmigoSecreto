@@ -30,11 +30,11 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <label for="startDate" class="form-label">Fecha de inicio del Amigo Secreto:</label>
-                                    <input type="date" id="startDate" class="form-control" required />
+                                    <input type="date" id="startDate" class="form-control" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="assignDate" class="form-label">Fecha de asignación automática:</label>
-                                    <input type="date" id="assignDate" class="form-control" required />
+                                    <input type="date" id="assignDate" class="form-control" />
                                 </div>
                                 <div class="justify-content-center d-flex mt-3">
                                     <button type="submit" id="" class="btn btn-success mt-2 w-25">
@@ -88,17 +88,19 @@
 
                         if (!startDate || !assignDate) {
                             Swal.fire({
-                                title: 'Error',
+                                title: 'Espera',
                                 text: 'Por favor selecciona ambas fechas antes de continuar.',
-                                icon: 'error',
-                                confirmButtonText: 'Ok'
+                                icon: 'info',
+                                confirmButtonColor: '#00712D',
+                                confirmButtonText: 'Aceptar'
                             });
                         } else if (new Date(startDate) > new Date(assignDate)) {
                             Swal.fire({
                                 title: 'Error',
                                 text: 'La fecha de inicio no puede ser posterior a la fecha de asignación automática.',
                                 icon: 'error',
-                                confirmButtonText: 'Ok'
+                                confirmButtonText: 'Aceptar',
+                                confirmButtonColor: '#dc3545',
                             });
                         } else {
                             Swal.fire({
@@ -107,11 +109,38 @@
                                 icon: 'question',
                                 showCancelButton: true,
                                 confirmButtonText: 'Sí, asignar',
+                                confirmButtonColor: '#00712D',
                                 cancelButtonText: 'Cancelar',
                             }).then((result) => {
                                 if (result.isConfirmed) {
-                                    // Lógica para asignar las fechas
-                                    Swal.fire('Fechas Asignadas', 'Las fechas han sido actualizadas correctamente.', 'success');
+                                    $.ajax({
+                                        url: '/admin/fechas',
+                                        type: 'PUT',
+                                        data: JSON.stringify({
+                                            fecha_juego: startDate,
+                                            fecha_asignacion: assignDate
+                                        }),
+                                        contentType: 'application/json',
+                                        success: function (response) {
+                                            Swal.fire({
+                                                title: 'Fechas Asignadas',
+                                                text: 'Las fechas han sido actualizadas correctamente.',
+                                                icon: 'success',
+                                                confirmButtonText: 'Aceptar',
+                                                confirmButtonColor: '#00712D',
+
+                                            });
+                                        },
+                                        error: function (xhr, status, error) {
+                                            Swal.fire({
+                                                title: 'Error',
+                                                text: 'Hubo un problema al actualizar las fechas.',
+                                                icon: 'error',
+                                                confirmButtonText: 'Aceptar',
+                                                confirmButtonColor: '#dc3545',
+                                            });
+                                        }
+                                    });
                                 }
                             });
                         }
@@ -124,15 +153,36 @@
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Sí, reiniciar',
+                            confirmButtonColor: '#00712D',
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Lógica para reiniciar el juego
-                                Swal.fire('Reiniciado', 'El juego ha sido reiniciado.', 'success');
+                                $.ajax({
+                                    url: '/admin/reset-game',
+                                    type: 'POST',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Reiniciado',
+                                            text: 'El juego ha sido reiniciado.',
+                                            icon: 'success',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#00712D',
+
+                                        });
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Hubo un problema al reiniciar el juego.',
+                                            icon: 'error',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#dc3545',
+                                        });
+                                    }
+                                });
                             }
                         });
                     });
-
                     $('#resetUsers').on('click', function () {
                         Swal.fire({
                             title: '¿Estás seguro?',
@@ -140,15 +190,36 @@
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Sí, reiniciar',
+                            confirmButtonColor: '#00712D',
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Lógica para reiniciar usuarios
-                                Swal.fire('Reiniciado', 'Todos los usuarios han sido reiniciados.', 'success');
+                                $.ajax({
+                                    url: '/admin/reset-users',
+                                    type: 'POST',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Reiniciado',
+                                            text: 'Todos los usuarios han sido reiniciados.',
+                                            icon: 'success',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#00712D',
+
+                                        });
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Hubo un problema al reiniciar los usuarios.',
+                                            icon: 'error',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#dc3545',
+                                        });
+                                    }
+                                });
                             }
                         });
                     });
-
                     $('#resetFriends').on('click', function () {
                         Swal.fire({
                             title: '¿Estás seguro?',
@@ -156,11 +227,33 @@
                             icon: 'warning',
                             showCancelButton: true,
                             confirmButtonText: 'Sí, reiniciar',
+                            confirmButtonColor: '#00712D',
                             cancelButtonText: 'Cancelar',
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Lógica para reiniciar amigos secretos
-                                Swal.fire('Reiniciado', 'Las asignaciones han sido eliminadas.', 'success');
+                                $.ajax({
+                                    url: '/admin/reset-friends',
+                                    type: 'POST',
+                                    success: function (response) {
+                                        Swal.fire({
+                                            title: 'Reiniciado',
+                                            text: 'Los asignaciones de amigo secreto han sido eliminadas.',
+                                            icon: 'success',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#00712D',
+
+                                        });
+                                    },
+                                    error: function (xhr, status, error) {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: 'Hubo un problema al reiniciar los amigos secretos.',
+                                            icon: 'error',
+                                            confirmButtonText: 'Aceptar',
+                                            confirmButtonColor: '#dc3545',
+                                        });
+                                    }
+                                });
                             }
                         });
                     });

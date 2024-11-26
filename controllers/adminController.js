@@ -1,6 +1,39 @@
 const UserModel = require('../models/userModel');
+const DateModel = require('../models/dateModel');
+const AdminModel = require('../models/adminModel');
 
 const adminController = {
+    // Obtener todas las fechas
+    getDates: (req, res) => {
+        DateModel.getDates((err, dates) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener las fechas' });
+            }
+            res.json(dates);
+        });
+    },
+
+    // Actualizar las fechas
+    updateDates: (req, res) => {
+        const { fecha_juego, fecha_asignacion } = req.body;
+
+        // Validar las fechas
+        if (!fecha_juego || !fecha_asignacion) {
+            return res.status(400).json({ error: 'Ambas fechas son requeridas' });
+        }
+
+        if (new Date(fecha_juego) > new Date(fecha_asignacion)) {
+            return res.status(400).json({ error: 'La fecha de inicio no puede ser posterior a la fecha de asignación automática' });
+        }
+
+        DateModel.updateDates(fecha_juego, fecha_asignacion, (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al actualizar las fechas' });
+            }
+            res.json({ message: 'Fechas actualizadas correctamente' });
+        });
+    },
+
     // Obtener todos los usuarios
     getAllUsers: (req, res) => {
         UserModel.getAllUsers((err, users) => {
@@ -47,7 +80,7 @@ const adminController = {
     },
 
     editUser: (req, res) => {
-        const userId = req.params.id;  
+        const userId = req.params.id;
         const userData = req.body;
 
         UserModel.editUser(userId, userData, (err, result) => {
@@ -66,6 +99,36 @@ const adminController = {
                 return res.status(500).json({ error: 'Error al eliminar el usuario' });
             }
             res.json({ message: 'Usuario eliminado correctamente' });
+        });
+    },
+
+    // Reiniciar el juego
+    resetGame: (req, res) => {
+        AdminModel.resetGame((err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al reiniciar el juego' });
+            }
+            res.json({ message: 'El juego ha sido reiniciado correctamente' });
+        });
+    },
+
+    // Reiniciar solo los usuarios
+    resetUsers: (req, res) => {
+        AdminModel.resetUsers((err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al reiniciar los usuarios' });
+            }
+            res.json({ message: 'Los usuarios han sido reiniciados correctamente' });
+        });
+    },
+
+    // Reiniciar solo los amigos secretos
+    resetFriends: (req, res) => {
+        AdminModel.resetFriends((err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al reiniciar los amigos secretos' });
+            }
+            res.json({ message: 'Las asignaciones de amigos secretos han sido reiniciadas correctamente' });
         });
     }
 };

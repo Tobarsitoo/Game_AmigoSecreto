@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="/css/styles.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        .img-fluid {
+            max-width: 126%;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,10 +26,10 @@
                         <div class="row g-0">
                             <div class="col-md-6 col-lg-5 d-none d-md-block">
                                 <img src="../amigo_secreto.webp" alt="login form" class="img-fluid"
-                                    style="border-radius: 1rem 0 0 1rem; height: 100%; width: 100%;" />
+                                    style="border-radius: 1rem 0 0 1rem; height: 100%; width: 122%;" />
                             </div>
                             <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                                <div class="card-body p-4 p-lg-5 text-black">
+                                <div class="card-body p-4 p-lg-5 text-black" style="margin-left: 5rem;">
                                     <form id="loginForm" class="needs-validation" novalidate>
                                         <div class="d-flex mb-3 pb-1 justify-content-center">
                                             <img src="https://www.coopserp.com/wp1/wp-content/uploads/2024/04/Logo-grande-Coopserp-2019-e1721607356635.png"
@@ -64,7 +70,7 @@
             Swal.fire({
                 icon: 'info',
                 title: 'Información Importante',
-                text: 'Tu usuario es tu cédula y tu contraseña es igual. Además recuerda que aún no podras jugar amigo secreto hasta que sea habilitado, mientras podras agregar tus preferencias para que cuando seas asignado como amigo puedan obtener tu infromación para un juego satisfactorio',
+                text: 'Tu usuario y contraseña son tu número de cédula. Debes de tener en cuenta la fechas que te han brindado para el juego, ya que puede que al ruleta no este habilitada. Mientras tanto, puedes agregar tus preferencias de regalos y dulces para que, cuando alguien te tenga como amigo asignado, pueda conocer tus gustos y disfrutar del juego de la mejor manera.',
                 confirmButtonColor: '#4A90E2',
                 confirmButtonText: 'Entendido'
             });
