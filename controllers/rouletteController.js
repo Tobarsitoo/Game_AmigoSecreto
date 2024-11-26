@@ -16,9 +16,14 @@ exports.validateAndAssignAmigoSecreto = (req, res) => {
         const now = new Date();
 
         if (now < new Date(fecha_juego) || now > new Date(fecha_asignacion)) {
+            const formattedFechaJuego = new Date(fecha_juego).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
             return res.status(403).json({ 
                 success: false, 
-                message: 'La ruleta solo puede girarse dentro del rango de fechas permitido.' 
+                message: `La ruleta solo puede girarse dentro del rango de fechas permitido. Podras girar la ruleta desde ${formattedFechaJuego}.`
             });
         }
 
