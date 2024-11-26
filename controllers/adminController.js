@@ -130,6 +130,27 @@ const adminController = {
             }
             res.json({ message: 'Las asignaciones de amigos secretos han sido reiniciadas correctamente' });
         });
+    },
+
+    // Obtener el total de usuarios y amigos secretos asignados
+    getTotalUsersAndFriends: (req, res) => {
+        UserModel.getTotalUsers((err, totalUsers) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error al obtener el total de usuarios' });
+            }
+
+            AdminModel.getTotalAssignedFriends((err, totalAssignedFriends) => {
+                if (err) {
+                    return res.status(500).json({ error: 'Error al obtener el total de amigos secretos asignados' });
+                }
+
+                res.render('friend', {
+                    totalUsers: totalUsers,
+                    totalAssignedFriends: totalAssignedFriends,
+                    friends: totalAssignedFriends
+                });
+            });
+        });
     }
 };
 

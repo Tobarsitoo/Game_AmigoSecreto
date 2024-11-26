@@ -60,7 +60,7 @@ exports.assignAmigoSecreto = (req, res) => {
         }
 
         UserModel.getRandomUser(userId, userGender, (err, amigo) => {
-            if (err || !amigo) {
+            if (err || !amigo || amigo.rol === 'administrador') {
                 console.error(err || 'No se encontró un amigo.');
                 return res.json({ success: false, status: 404, message: 'No hay amigos disponibles para asignar.' });
             }
@@ -97,7 +97,7 @@ exports.assignAmigoSecretoAutomatico = (req, res) => {
         }
 
         UserModel.getRandomUser(userId, userGender, (err, amigo) => {
-            if (err || !amigo) {
+            if (err || !amigo || amigo.rol === 'administrador') {
                 console.error(err || 'No se encontró un amigo.');
                 return res.json({ success: false, status: 404, message: 'No hay amigos disponibles para asignar.' });
             }

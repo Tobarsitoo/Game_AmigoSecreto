@@ -9,6 +9,7 @@ router.get('/users/:id', isAuthenticated, adminController.getUserById); // Ruta 
 router.post('/users', isAuthenticated, adminController.addUser); // Ruta para agregar un usuario
 router.put('/users/:id', adminController.editUser); // Ruta para editar un usuario
 router.delete('/users/:id', isAuthenticated, adminController.deleteUser); // Ruta para eliminar un usuario
+router.get('/friends-total', isAuthenticated, adminController.getTotalUsersAndFriends); // Ruta para obtener el total de usuarios y amigos secretos asignados
 
 // Ruta de fechas
 router.get('/fechas', isAuthenticated, adminController.getDates); // Ruta para obtener las fechas

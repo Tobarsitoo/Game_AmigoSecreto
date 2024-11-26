@@ -74,7 +74,25 @@ const UserModel = {
             if (err) return callback(err);
             callback(null, results);
         });
-    }
+    },
+
+    // Obtener el total de usuarios y amigos secretos asignados
+    getTotalUsersAndFriends: (callback) => {
+        // Obtener el total de usuarios
+        connection.query('SELECT COUNT(*) AS total FROM usuarios WHERE rol = "usuario"', (err, userResults) => {
+            if (err) return callback(err);
+
+            // Obtener el total de amigos secretos
+            connection.query('SELECT COUNT(*) AS total FROM amigos_secreto', (err, friendResults) => {
+                if (err) return callback(err);
+
+                const totalUsers = userResults[0].total;
+                const totalAssignedFriends = friendResults[0].total;
+
+                callback(null, { totalUsers, totalAssignedFriends });
+            });
+        });
+    }   
 };
 
 module.exports = UserModel;

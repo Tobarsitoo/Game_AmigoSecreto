@@ -19,6 +19,7 @@ const UserModel = {
                     FROM amigos_secreto 
                     WHERE id_usuario = ?
                 )
+                AND u.rol = 'usuario'
             ORDER BY RAND()
             LIMIT 1;
         `;
@@ -39,6 +40,7 @@ const UserModel = {
                     FROM amigos_secreto 
                     WHERE id_usuario = ?
                 )
+                AND u.rol = 'usuario'
             ORDER BY RAND()
             LIMIT 1;
         `;
