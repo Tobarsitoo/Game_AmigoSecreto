@@ -100,7 +100,13 @@
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
             <script>
                 $(document).ready(function () {
-                    document.querySelector('#spinButton').addEventListener('click', () => {
+                    const spinButton = $('#spinButton');
+                    const wheelStrip = $('#wheelStrip');
+
+                    spinButton.on('click', () => {
+                        // Deshabilitar el botón mientras se ejecuta la animación
+                        spinButton.prop('disabled', true);
+
                         fetch('/roulette/validate-dates', { method: 'POST' })
                             .then((response) => response.json())
                             .then((data) => {
@@ -112,15 +118,15 @@
                                         confirmButtonText: 'Aceptar',
                                         confirmButtonColor: '#357ABD'
                                     });
+                                    spinButton.prop('disabled', false); // Volver a habilitar el botón si no se puede girar
                                 } else {
                                     fetch('/roulette/assign', { method: 'POST' })
                                         .then((response) => response.json())
                                         .then((data) => {
                                             if (data.success) {
                                                 // Activar la animación de la ruleta
-                                                const wheelStrip = $('#wheelStrip');
                                                 wheelStrip.removeClass('scrolling');
-                                                void wheelStrip.offsetWidth;
+                                                void wheelStrip.offsetWidth; // Forzar un reflujo para reiniciar la animación
                                                 wheelStrip.addClass('scrolling');
 
                                                 // Simular el tiempo de giro y luego mostrar el modal con información
@@ -178,14 +184,15 @@
                                                             } else {
                                                                 console.error('Error al obtener las preferencias del amigo.');
                                                             }
+                                                            spinButton.prop('disabled', false); // Habilitar el botón después de la animación
                                                         },
                                                         error: function () {
                                                             console.error('Error en la solicitud para obtener las preferencias del amigo.');
+                                                            spinButton.prop('disabled', false); // Habilitar el botón en caso de error
                                                         }
                                                     });
                                                 }, 5000);
                                             } else {
-                                                // Mostrar alerta de inmediato si no hay asignación
                                                 Swal.fire({
                                                     title: data.status === 404 ? 'Sin asignar' : 'Error',
                                                     text: data.message,
@@ -193,6 +200,7 @@
                                                     confirmButtonText: 'Aceptar',
                                                     confirmButtonColor: '#357ABD'
                                                 });
+                                                spinButton.prop('disabled', false); // Habilitar el botón en caso de error
                                             }
                                         })
                                         .catch((error) => {
@@ -203,6 +211,7 @@
                                                 confirmButtonText: 'Aceptar',
                                             });
                                             console.error('Error:', error);
+                                            spinButton.prop('disabled', false); // Habilitar el botón en caso de error
                                         });
                                 }
                             })
@@ -214,6 +223,7 @@
                                     confirmButtonText: 'Aceptar',
                                 });
                                 console.error('Error:', error);
+                                spinButton.prop('disabled', false); // Habilitar el botón en caso de error
                             });
                     });
                 });
