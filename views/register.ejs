@@ -45,12 +45,11 @@
                                 <label for="fechaExpedicion">Fecha de Expedición</label>
                                 <input type="date" class="form-control" id="fechaExpedicion">
                             </div>
-                            <div class="form-group d-flex justify-content-between">
+                            <div class="form-group">
                                 <button type="submit" class="btn btn-primary rounded submit p-3 px-5">Validar</button>
                                 <button type="button" class="btn btn-secondary rounded submit p-3 px-5"
-                                    onclick="window.location.href='/'" style="
-                                    margin-top: 31%;
-                                ">Volver</button>
+                                    onclick="window.location.href='/'" style="margin-top: 31%;">Volver
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -66,6 +65,10 @@
                 const cedula = $('#cedula').val();
                 const fechaNacimiento = $('#fechaNacimiento').val();
                 const fechaExpedicion = $('#fechaExpedicion').val();
+
+                // Quitar los guiones de las fechas
+                const fechaNacimientoSinGuiones = fechaNacimiento.replace(/-/g, '');
+                const fechaExpedicionSinGuiones = fechaExpedicion.replace(/-/g, '');
 
                 if (!cedula || !fechaNacimiento || !fechaExpedicion) {
                     Swal.fire({
@@ -85,7 +88,7 @@
                 fetch(apiUrl)
                     .then(response => response.json())
                     .then(data => {
-                        if (data.error) {
+                        if (data.status == 422) {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error',
@@ -94,15 +97,25 @@
                                 confirmButtonText: 'Aceptar'
                             });
                         } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Datos Validados',
-                                text: 'Cédula validada correctamente. Procediendo a la inscripción...',
-                                showConfirmButton: false,
-                                timer: 1500
-                            }).then(() => {
-                                enviarDatosInscripcion(data);
-                            });
+                            if (data.status == 200 && fechaNacimientoSinGuiones === data.asociado.FECHANA && fechaExpedicionSinGuiones === data.asociado.FECHAEX) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Datos Validados',
+                                    text: 'Cédula validada correctamente. Procediendo a la inscripción...',
+                                    showConfirmButton: false,
+                                    timer: 1500
+                                }).then(() => {
+                                    enviarDatosInscripcion(data);
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Datos Invalidos',
+                                    text: 'Revisa us datos y vuelve a validar nuevamente',
+                                    confirmButtonText: 'Aceptar',
+                                    confirmButtonColor: '#dc3545'
+                                });
+                            }
                         }
                     })
                     .catch(error => {
