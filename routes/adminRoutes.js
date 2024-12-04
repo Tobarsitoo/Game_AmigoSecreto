@@ -1,23 +1,48 @@
-const express = require('express');
-const router = express.Router();
-const adminController = require('../controllers/adminController');
-const { isAuthenticated } = require('../middleware/auth');
+// Importar las dependencias necesarias
+const express = require('express');  // Framework web para Node.js
+const router = express.Router();  // Crear una nueva instancia del enrutador de Express
+const adminController = require('../controllers/adminController');  // Controlador que maneja las operaciones administrativas
+const { isAuthenticated } = require('../middleware/auth');  // Middleware para verificar si el usuario está autenticado
 
-// Rutas de usuarios
-router.get('/users', isAuthenticated, adminController.getAllUsers); // Ruta para obtener usuarios (ya existente)
-router.get('/users/:id', isAuthenticated, adminController.getUserById); // Ruta para obtener un usuario (para edición)
-router.post('/users', isAuthenticated, adminController.addUser); // Ruta para agregar un usuario
-router.put('/users/:id', adminController.editUser); // Ruta para editar un usuario
-router.delete('/users/:id', isAuthenticated, adminController.deleteUser); // Ruta para eliminar un usuario
-router.get('/friends-total', isAuthenticated, adminController.getTotalUsersAndFriends); // Ruta para obtener el total de usuarios y amigos secretos asignados
+// Rutas de usuarios: Gestión de usuarios en la aplicación ======================================>
 
-// Ruta de fechas
-router.get('/fechas', isAuthenticated, adminController.getDates); // Ruta para obtener las fechas
-router.put('/fechas', isAuthenticated, adminController.updateDates); // Ruta para actualizar las fechas
+// Obtener todos los usuarios (solo accesible para usuarios autenticados)
+router.get('/users', isAuthenticated, adminController.getAllUsers); 
 
-// Rutas de reinicio
-router.post('/reset-game', isAuthenticated, adminController.resetGame); // Ruta para reiniciar el jeugo
-router.post('/reset-users', isAuthenticated, adminController.resetUsers); // Ruta para reiniciar los usuarios
-router.post('/reset-friends', isAuthenticated, adminController.resetFriends); // Ruta para reiniciar los amigos
+// Obtener un usuario por su ID (para edición, solo accesible para usuarios autenticados)
+router.get('/users/:id', isAuthenticated, adminController.getUserById); 
 
+// Crear un nuevo usuario (solo accesible para usuarios autenticados)
+router.post('/users', isAuthenticated, adminController.addUser); 
+
+// Editar un usuario existente (requiere autenticación para modificar)
+router.put('/users/:id', adminController.editUser); 
+
+// Eliminar un usuario por su ID (solo accesible para usuarios autenticados)
+router.delete('/users/:id', isAuthenticated, adminController.deleteUser); 
+
+// Obtener el total de usuarios y amigos asignados (solo accesible para usuarios autenticados)
+router.get('/friends-total', isAuthenticated, adminController.getTotalUsersAndFriends); 
+
+
+// Rutas de fechas: Gestión de fechas del juego ======================================>
+
+// Obtener las fechas del sistema (solo accesible para usuarios autenticados)
+router.get('/fechas', isAuthenticated, adminController.getDates); 
+
+// Actualizar las fechas (solo accesible para usuarios autenticados)
+router.put('/fechas', isAuthenticated, adminController.updateDates); 
+
+// Rutas de reinicio: Reiniciar componentes del juego
+
+// Reiniciar el juego (solo accesible para usuarios autenticados)
+router.post('/reset-game', isAuthenticated, adminController.resetGame); 
+
+// Reiniciar los usuarios (solo accesible para usuarios autenticados)
+router.post('/reset-users', isAuthenticated, adminController.resetUsers); 
+
+// Reiniciar la asignación de amigos secretos (solo accesible para usuarios autenticados)
+router.post('/reset-friends', isAuthenticated, adminController.resetFriends); 
+
+// Exportar las rutas para que puedan ser utilizadas en la aplicación principal
 module.exports = router;
