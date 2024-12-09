@@ -34,10 +34,10 @@
                         style="color: #FFD1E3; background-color: rgba(0, 0, 0, 0.5); padding: 0 10px; border-radius: 5px;">
                         AMIGO SECRETO
                     </span>.
-                    Para comenzar, agrega tus deseos:
+                    Para comenzar, agrega tus dulces y regalos preferidos:
                 </p>
                 <a class="btn btn-lg rounded-pill" href="#deseos"
-                    style="background-color: #2C3E50; color: #FFD1E3;">Agregar deseos</a>
+                    style="background-color: #2C3E50; color: #FFD1E3;">Agregar dulces y regalos</a>
             </div>
         </header>
 
@@ -47,10 +47,9 @@
                 <div class="row gx-4 justify-content-center">
                     <div class="col-lg-10">
                         <h2 class="text-center pb-5 text-uppercase"
-                            style="color: #4A90E2; font-size: 3rem; font-weight: bold;">🎁 Lista de Deseos 🎁</h2>
+                            style="color: #4A90E2; font-size: 3rem; font-weight: bold;">🎁 Listas de Dulces y Regalos 🎁
+                        </h2>
                         <p class="lead text-center" style="color: #2C3E50;  font-size: 1.3rem;">
-                            Estas son tus <span class="fw-bold text-uppercase"
-                                style="color: #4A90E2; font-size: 1.3rem;">deseos</span>.
                             Aquí puedes agregar los dulces y regalos que te gustaría recibir de tu <span
                                 class="fw-bold text-uppercase" style="color: #2C3E50;  font-size: 1.3rem;">amigo
                                 secreto</span>.
@@ -72,7 +71,7 @@
                                             <thead>
                                                 <tr>
                                                     <th style="color: #4A90E2;">Dulces</th>
-                                                    <th style="color: #4A90E2;">Acciones</th>
+                                                    <th style="color: #4A90E2;"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -112,6 +111,10 @@
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="roulette">
+            <%- include('./roulette'); %>
         </section>
 
         <!-- Amigo -->
@@ -183,9 +186,10 @@
                         info: false,
                         paging: false,
                         searching: false,
+                        ordering: false,
                         columns: [
                             { title: "Dulces" },
-                            { title: "Acciones", orderable: false, searchable: false }
+                            { title: "", orderable: false, searchable: false }
                         ]
                     });
 
@@ -196,9 +200,10 @@
                         info: false,
                         paging: false,
                         searching: false,
+                        ordering: false,
                         columns: [
                             { title: "Regalos" },
-                            { title: "Acciones", orderable: false, searchable: false }
+                            { title: "", orderable: false, searchable: false }
                         ]
                     });
 
