@@ -140,13 +140,14 @@ exports.getAmigoPreferences = (req, res) => {
                     console.error(err);
                     return res.status(500).json({ success: false, message: 'Error al obtener los dulces del amigo secreto' });
                 }
-
+                
                 return res.json({
                     success: true,
                     amigo: {
                         nombre: amigo.nombres,
                         genero: amigo.genero,
                         area: amigo.area,
+                        cargo: amigo.cargo,
                         regalos: regalos.map(r => r.regalo),
                         dulces: dulces.map(d => d.dulce)
                     }

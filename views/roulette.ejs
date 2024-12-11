@@ -21,7 +21,7 @@
                             Ruleta"</span> para comenzar la emoción</p>
                 </div>
             </div>
-            <div class="row justify-content-center wheel-container" style="margin-top: -142px;">
+            <div class="row justify-content-center wheel-container" style="margin-top: -120px;">
                 <div class="wheel shadow-lg bg-white" id="wheel">
                     <div class="wheel-strip" id="wheelStrip">
                         <img src="../studio.png" alt="Ruleta">
@@ -171,9 +171,12 @@
                                                             }
 
                                                             $('#resultModal').modal('show');
-
                                                             $('#resultModal').on('hidden.bs.modal', function () {
                                                                 window.location.href = '/usuario-dashboard#amigo';
+                                                                setTimeout(function () {
+                                                                    location.reload();
+                                                                }, 400);  // Espera 100 milisegundos para que la recarga ocurra
+                                                                // Recargar la página
                                                             });
                                                         } else {
                                                             console.error('No se encontró información del amigo asignado.');

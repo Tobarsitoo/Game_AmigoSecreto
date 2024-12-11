@@ -69,13 +69,26 @@
         </div>
     </section>
     <script>
-
         // Mostrar alerta informativa al cargar la página
         document.addEventListener('DOMContentLoaded', function () {
             Swal.fire({
                 icon: 'info',
                 title: 'Información Importante',
-                text: 'Tu usuario y contraseña son tu número de cédula. Ya estas registrado, y puedes iniciar sesión, agregar dulces, regalos y además puedes girar la ruleta para asignarte un amigo secreto. Si tienes problemas con tu inicio de sesión, por favor comunicarte con el area de sistemas.',
+                html: `
+                    <p><strong>¡Bienvenido al juego de Amigo Secreto! 🎉</strong></p>
+                    <ul style="text-align: left; margin-left: 15px;">
+                        <li><strong>Usuario y Contraseña:</strong> Ambos son tu número de cédula.</li>
+                        <li><strong>¿Qué puedes hacer?</strong>
+                            <ul>
+                                <li>✔ Inicia sesión para acceder a todas las funciones.</li>
+                                <li>✔ Agrega tus dulces y regalos favoritos.</li>
+                                <li>✔ Gira la ruleta para asignarte un Amigo Secreto.</li>
+                            </ul>
+                        </li>
+                        <li><strong>¿Problemas para iniciar sesión?</strong> Por favor, comunícate con el área de sistemas para recibir asistencia.</li>
+                        <li><strong>Precio minimo del regalo:</strong> 20.000 COP </li>
+                    </ul>
+                `,
                 confirmButtonColor: '#4A90E2',
                 confirmButtonText: 'Entendido'
             });

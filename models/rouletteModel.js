@@ -77,7 +77,7 @@ const AmigoSecretoModel = {
      */
     getAmigo: (userId, callback) => {
         const query = `
-            SELECT u.id_usuario, u.nombres, u.genero, a.nombre AS area
+            SELECT u.id_usuario, u.nombres, u.genero, u.cargo, a.nombre AS area
             FROM amigos_secreto am
             JOIN usuarios u ON am.id_amigo_secreto = u.id_usuario
             JOIN agencias a ON u.area = a.cu
