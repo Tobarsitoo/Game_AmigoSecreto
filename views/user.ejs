@@ -14,6 +14,18 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 </head>
 
+<style>
+    #logout {
+        background-color: #2C3E50;
+        color: #FFD1E3;
+    }
+
+    #logout:hover {
+        background-color: #4A90E2;
+        color: #ffffff;
+    }
+</style>
+
 <body id="page-top">
     <%- include('../partials/navbar'); %>
         <header class="position-relative">
@@ -189,6 +201,9 @@
                                         <!-- <div id="noDulces" class="empty-message text-center mt-2"
                                             style="color: #2C3E50;">No hay dulces asignados.</div> -->
                                     </div>
+                                </div>
+                                <div>
+                                    <button id="logout" class="btn btn-lg">Cerrar Sesión</button>
                                 </div>
                             </div>
                         </div>
@@ -508,6 +523,25 @@
                             $('#amigoGenero').hide();
                             $('#amigoArea').hide();
                             $('#amigoCargo').hide();
+                        });
+                });
+            </script>
+            <script>
+                document.getElementById('logout').addEventListener('click', () => {
+                    fetch('/logout', {
+                        method: 'GET',
+                        credentials: 'same-origin'
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                window.location.href = '/';
+                            } else {
+                                console.error('No se pudo cerrar sesión');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error al cerrar sesión:', error);
                         });
                 });
             </script>
